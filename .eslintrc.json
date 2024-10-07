@@ -1,3 +1,18 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"]
+  "extends": ["next/core-web-vitals", "next/typescript"],
+  "rules": {
+    "react/display-name": "off",
+    "no-unused-vars": "off",
+    "no-restricted-imports": [
+      "warn",
+      {
+        "name": "react-redux",
+        "importNames": [
+          "useSelector",
+          "useDispatch"
+        ],
+        "message": "Используйте типизированные хуки `useAppDispatch` и `useAppSelector`!"
+      }
+    ]
+  }
 }
