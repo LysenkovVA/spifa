@@ -6,13 +6,24 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prisma:client:generate": "npm exec prisma generate",
+    "prisma:db:push": "npm exec prisma db push",
+    "prisma:db:pull": "npm exec prisma db pull",
+    "prisma:db:seed": "npx prisma db seed",
+    "prisma:initdb": "npm run prisma:migrate --name create_db && npm run prisma:db:seed",
+    "prisma:db:dev": "npm run prisma:db:push && npm run prisma:db:seed"
+  },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   },
   "dependencies": {
     "@ant-design/icons": "^5.5.1",
     "@ant-design/nextjs-registry": "^1.0.1",
+    "@prisma/client": "^5.20.0",
     "@reduxjs/toolkit": "^2.2.7",
     "antd": "^5.21.2",
+    "dayjs": "^1.11.13",
     "next": "14.2.14",
     "pg": "^8.13.0",
     "react": "^18",
@@ -27,6 +38,7 @@
     "fork-ts-checker-webpack-plugin": "^9.0.2",
     "prettier": "^3.3.3",
     "prisma": "^5.20.0",
+    "ts-node": "^10.9.2",
     "typescript": "^5"
   }
 }

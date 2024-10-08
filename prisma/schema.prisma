@@ -1,0 +1,155 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["relationJoins"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model bo_paymentsquery {
+  id_payment_query                                                       Int                    @id(map: "pk_bo_paymentsquery") @default(autoincrement())
+  create_date                                                            DateTime
+  create_user                                                            Int
+  create_user_role                                                       Int
+  edit_date                                                              DateTime?
+  edit_user                                                              Int?
+  edit_user_role                                                         Int?
+  number                                                                 String?                @db.VarChar(50)
+  date_query                                                             DateTime
+  id_period                                                              Int
+  id_budget                                                              Int?
+  id_project                                                             Int?
+  id_center                                                              Int
+  id_article                                                             Int
+  definition                                                             String
+  id_pay_query_type                                                      Int
+  summa                                                                  Decimal                @db.Money
+  id_currency                                                            Int
+  payer_id_staff                                                         Int?
+  payer_id_company                                                       Int?
+  payer_id_account                                                       Int?
+  recipient_id_staff                                                     Int?
+  recipient_id_company                                                   Int?
+  recipient_id_account                                                   Int?
+  confirm_role                                                           Int?
+  confirm_status                                                         Int?
+  confirm_user                                                           Int?
+  confirm_date                                                           DateTime?
+  input_type                                                             Int?
+  process_status                                                         Int?
+  id_company                                                             Int?
+  reestr_in                                                              Int?                   @db.SmallInt
+  reestr_definition                                                      String?
+  plan_date_pay                                                          DateTime?
+  pay_from_other_kontragent                                              Int?                   @db.SmallInt
+  id_nds                                                                 Int?
+  summa_nds                                                              Decimal?               @db.Money
+  dict_account_bo_paymentsquery_payer_id_accountTodict_account           dict_account?          @relation("bo_paymentsquery_payer_id_accountTodict_account", fields: [payer_id_account], references: [id_account], onDelete: NoAction, onUpdate: NoAction, map: "fk_bo_paymentsquery_dict_account")
+  dict_account_bo_paymentsquery_recipient_id_accountTodict_account       dict_account?          @relation("bo_paymentsquery_recipient_id_accountTodict_account", fields: [recipient_id_account], references: [id_account], onDelete: NoAction, onUpdate: NoAction, map: "fk_bo_paymentsquery_dict_account1")
+  dict_article                                                           dict_article           @relation(fields: [id_article], references: [id_article], onDelete: NoAction, onUpdate: NoAction, map: "fk_bo_paymentsquery_dict_article")
+  dict_centerfinance                                                     dict_centerfinance     @relation(fields: [id_center], references: [id_center], onDelete: NoAction, onUpdate: NoAction, map: "fk_bo_paymentsquery_dict_centerfinance")
+  dict_companyjur_bo_paymentsquery_payer_id_companyTodict_companyjur     dict_companyjur?       @relation("bo_paymentsquery_payer_id_companyTodict_companyjur", fields: [payer_id_company], references: [id_company], onDelete: NoAction, onUpdate: NoAction, map: "fk_bo_paymentsquery_dict_companyjur")
+  dict_companyjur_bo_paymentsquery_recipient_id_companyTodict_companyjur dict_companyjur?       @relation("bo_paymentsquery_recipient_id_companyTodict_companyjur", fields: [recipient_id_company], references: [id_company], onDelete: NoAction, onUpdate: NoAction, map: "fk_bo_paymentsquery_dict_companyjur1")
+  dict_companyjur_bo_paymentsquery_id_companyTodict_companyjur           dict_companyjur?       @relation("bo_paymentsquery_id_companyTodict_companyjur", fields: [id_company], references: [id_company], onDelete: NoAction, onUpdate: NoAction, map: "fk_bo_paymentsquery_dict_companyjur2")
+  dict_paymentsquerytype                                                 dict_paymentsquerytype @relation(fields: [id_pay_query_type], references: [id_pay_query_type], onDelete: NoAction, onUpdate: NoAction, map: "fk_bo_paymentsquery_dict_paymentsquerytype")
+  dict_period                                                            dict_period            @relation(fields: [id_period], references: [id_period], onDelete: NoAction, onUpdate: NoAction, map: "fk_bo_paymentsquery_dict_period")
+}
+
+model dict_account {
+  id_account                                                           Int                @id(map: "pk_dict_account") @default(autoincrement())
+  create_date                                                          DateTime
+  create_user                                                          Int
+  create_user_role                                                     Int
+  edit_date                                                            DateTime?
+  edit_user                                                            Int?
+  edit_user_role                                                       Int?
+  account_name                                                         String             @db.VarChar(255)
+  id_account_type                                                      Int
+  number                                                               String?            @db.VarChar(100)
+  id_currency                                                          Int
+  id_company                                                           Int?
+  id_payment_type                                                      Int
+  start_summa                                                          Decimal?           @db.Money
+  id_bank                                                              Int?
+  kontragent                                                           Int                @db.SmallInt
+  input_type                                                           Int?
+  bo_paymentsquery_bo_paymentsquery_payer_id_accountTodict_account     bo_paymentsquery[] @relation("bo_paymentsquery_payer_id_accountTodict_account")
+  bo_paymentsquery_bo_paymentsquery_recipient_id_accountTodict_account bo_paymentsquery[] @relation("bo_paymentsquery_recipient_id_accountTodict_account")
+}
+
+model dict_article {
+  id_article         Int                @id(map: "pk_dict_article") @default(autoincrement())
+  id_article_group   Int
+  id_article_type    Int
+  article_code       String             @db.VarChar(50)
+  article_name       String             @db.VarChar(255)
+  article_code_digit Int?
+  bo_paymentsquery   bo_paymentsquery[]
+}
+
+model dict_centerfinance {
+  id_center        Int                @id(map: "pk_dict_centerfinance") @default(autoincrement())
+  center_name      String             @db.VarChar(255)
+  id_company       Int?
+  bo_paymentsquery bo_paymentsquery[]
+}
+
+model dict_companyjur {
+  id_company                                                              Int                @id(map: "pk_dict_companyjur") @default(autoincrement())
+  id_type                                                                 Int?
+  company_name                                                            String             @db.VarChar(255)
+  inn                                                                     String?            @db.VarChar(50)
+  kpp                                                                     String?            @db.VarChar(50)
+  okpo                                                                    String?            @db.VarChar(50)
+  jur_adress                                                              String?            @db.VarChar(500)
+  phone                                                                   String?            @db.VarChar(50)
+  kontragent                                                              Int                @db.SmallInt
+  ogrn                                                                    String?            @db.VarChar(255)
+  ogrn_date                                                               DateTime?
+  fio                                                                     String?            @db.VarChar(255)
+  okato                                                                   String?            @db.VarChar(255)
+  oktmo                                                                   String?            @db.VarChar(255)
+  okogu                                                                   String?            @db.VarChar(255)
+  okfs                                                                    String?            @db.VarChar(255)
+  okved                                                                   String?            @db.VarChar(255)
+  okopf                                                                   String?            @db.VarChar(255)
+  management                                                              String?
+  brach_type                                                              String?            @db.VarChar(20)
+  state_actuality_date                                                    DateTime?
+  state_registration_date                                                 DateTime?
+  state_liquidation_date                                                  DateTime?
+  state_status                                                            String?            @db.VarChar(20)
+  create_date                                                             DateTime?
+  create_user                                                             Int?
+  create_user_role                                                        Int?
+  edit_date                                                               DateTime?
+  edit_user                                                               Int?
+  edit_user_role                                                          Int?
+  input_type                                                              Int?
+  bo_paymentsquery_bo_paymentsquery_payer_id_companyTodict_companyjur     bo_paymentsquery[] @relation("bo_paymentsquery_payer_id_companyTodict_companyjur")
+  bo_paymentsquery_bo_paymentsquery_recipient_id_companyTodict_companyjur bo_paymentsquery[] @relation("bo_paymentsquery_recipient_id_companyTodict_companyjur")
+  bo_paymentsquery_bo_paymentsquery_id_companyTodict_companyjur           bo_paymentsquery[] @relation("bo_paymentsquery_id_companyTodict_companyjur")
+}
+
+model dict_paymentsquerytype {
+  id_pay_query_type Int                @id(map: "pk_dict_paymentsquerytype")
+  type_name         String             @db.VarChar(255)
+  order_type        Int?
+  bo_paymentsquery  bo_paymentsquery[]
+}
+
+model dict_period {
+  id_period        Int                @id(map: "pk_dict_period") @default(autoincrement())
+  date_begin       DateTime
+  date_end         DateTime
+  period_name      String             @db.VarChar(50)
+  month            String?            @db.VarChar(50)
+  month_number     Int?
+  year             Int?
+  quarter          Int?
+  half             Int?
+  closed           Int?               @db.SmallInt
+  bo_paymentsquery bo_paymentsquery[]
+}
