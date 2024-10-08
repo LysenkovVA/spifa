@@ -12,7 +12,8 @@
     "prisma:db:pull": "npm exec prisma db pull",
     "prisma:db:seed": "npx prisma db seed",
     "prisma:initdb": "npm run prisma:migrate --name create_db && npm run prisma:db:seed",
-    "prisma:db:dev": "npm run prisma:db:push && npm run prisma:db:seed"
+    "prisma:db:dev": "npm run prisma:db:push && npm run prisma:db:seed",
+    "prepare": "husky"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
@@ -33,11 +34,11 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "@typescript-eslint/eslint-plugin": "^8.8.1",
     "eslint": "^8",
     "eslint-config-next": "14.2.14",
     "eslint-config-prettier": "^9.1.0",
     "fork-ts-checker-webpack-plugin": "^9.0.2",
+    "husky": "^9.1.6",
     "prettier": "^3.3.3",
     "prisma": "^5.20.0",
     "ts-node": "^10.9.2",
