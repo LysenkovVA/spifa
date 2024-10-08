@@ -5,6 +5,7 @@ import Sider from "antd/es/layout/Sider";
 import { Layout, theme } from "antd";
 import { AppMenu } from "@/shared/UI/AppMenu";
 import { AppFooter } from "@/shared/UI/AppFooter";
+import { LayoutSiderScreenStyle } from "@/app/(private-routes)/layoutSiderScreenStyle";
 
 /**
  * Layout для страниц авторизованного пользователя
@@ -30,13 +31,8 @@ export default function UserLayout({
       >
         <Layout>
           <Sider
-            style={{
-              margin: "8px 0px 8px 8px",
-              borderRadius: token.borderRadius,
-              borderWidth: 1,
-              borderColor: token.colorBorder,
-              height: `calc(100vh - 2 * ${token.Layout?.headerHeight}px - 16px)`,
-            }}
+            style={LayoutSiderScreenStyle().cssProperties}
+            {...LayoutSiderScreenStyle().componentProps}
           >
             <AppMenu />
           </Sider>

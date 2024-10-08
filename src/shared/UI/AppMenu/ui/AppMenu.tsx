@@ -10,8 +10,6 @@ const AppMenu = () => {
 
   const { token } = theme.useToken();
 
-  const r = 1;
-
   return (
     <Menu
       mode="inline"
@@ -29,7 +27,6 @@ const AppMenu = () => {
         background: "whitesmoke",
         flex: 1,
         borderRadius: token.borderRadius,
-        //borderWidth: 1,
         borderColor: token.colorBorder,
         margin: "1px 0px 1px 1px",
         width: "calc(100% - 2px)",
