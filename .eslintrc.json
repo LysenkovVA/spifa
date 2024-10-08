@@ -1,5 +1,5 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"],
+  "extends": ["next/core-web-vitals", "next/typescript", "next", "prettier"],
   "rules": {
     "react/display-name": "off",
     "no-unused-vars": "off",
@@ -14,7 +14,7 @@
         "message": "Используйте типизированные хуки `useAppDispatch` и `useAppSelector`!"
       }
     ],
-    "@typescript-eslint/ no-empty-object-type": "off",
-    "@typescript-eslint/ no-unused-vars": "off"
+    "@typescript-eslint/no-empty-object-type": "off",
+    "@typescript-eslint/no-unused-vars": "off"
   }
 }

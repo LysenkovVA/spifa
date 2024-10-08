@@ -10,6 +10,8 @@ const AppMenu = () => {
 
   const { token } = theme.useToken();
 
+  const r = 1;
+
   return (
     <Menu
       mode="inline"
