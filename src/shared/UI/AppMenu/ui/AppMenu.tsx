@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { Menu, theme } from "antd";
-import { MenuItems } from "../config/MenuItems";
+import { menuArray, MenuItems } from "../config/MenuItems";
 
 const AppMenu = () => {
   const pathname = usePathname();
@@ -12,27 +12,32 @@ const AppMenu = () => {
 
   return (
     <Menu
-      mode="vertical"
+      mode="inline"
+      inlineCollapsed={false}
       defaultSelectedKeys={[
-        MenuItems.find((item) => item.target === pathname)?.key || "1",
+        menuArray.find((item) => item.target === pathname)?.key?.toString() ||
+          String(1),
       ]}
       selectedKeys={[
-        MenuItems.find((item) => item.target === pathname)?.key || "1",
+        menuArray.find((item) => item.target === pathname)?.key?.toString() ||
+          String(1),
       ]}
       items={MenuItems}
       style={{
-        background: "none",
+        background: "whitesmoke",
         flex: 1,
         borderRadius: token.borderRadius,
         //borderWidth: 1,
         borderColor: token.colorBorder,
         margin: "1px 0px 1px 1px",
-        height: `calc(100vh - 2 * ${token.Layout?.headerHeight}px - 16px)`,
+        width: "calc(100% - 2px)",
+        height: `calc(100vh - 2 * ${token.Layout?.headerHeight}px - 18px)`,
       }}
       onClick={(menuInfo) => {
         const { target } =
-          MenuItems.find((item) => item.key === menuInfo.key) || {};
+          menuArray.find((item) => item.key === menuInfo.key) || {};
         if (target) {
+          // window.open(target, "_blank");
           router.push(target);
         }
       }}

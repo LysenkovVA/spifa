@@ -13,6 +13,8 @@
         ],
         "message": "Используйте типизированные хуки `useAppDispatch` и `useAppSelector`!"
       }
-    ]
+    ],
+    "@typescript-eslint/ no-empty-object-type": "off",
+    "@typescript-eslint/ no-unused-vars": "off"
   }
 }

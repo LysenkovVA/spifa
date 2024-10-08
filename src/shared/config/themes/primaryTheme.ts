@@ -6,10 +6,10 @@ export const primaryTheme: ThemeConfig = {
     Layout: {
       headerHeight: 70,
       headerPadding: 0,
-      headerBg: "#87A2FF",
+      headerBg: "#3E5B87",
       footerPadding: 0,
-      footerBg: "#87A2FF",
-      siderBg: "#C4D7FF",
+      footerBg: "#3E5B87",
+      siderBg: "#3E5B87",
     },
   },
 };
