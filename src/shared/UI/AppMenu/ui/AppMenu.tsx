@@ -2,13 +2,15 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { Menu, theme } from "antd";
-import { menuArray, MenuItems } from "../config/MenuItems";
+import { useMenuItems } from "@/shared/UI/AppMenu/hooks/useMenuItems";
 
 const AppMenu = () => {
   const pathname = usePathname();
   const router = useRouter();
 
   const { token } = theme.useToken();
+
+  const [menuItems, menuArray] = useMenuItems();
 
   return (
     <Menu
@@ -22,7 +24,7 @@ const AppMenu = () => {
         menuArray.find((item) => item.target === pathname)?.key?.toString() ||
           String(1),
       ]}
-      items={MenuItems}
+      items={menuItems}
       style={{
         background: "whitesmoke",
         flex: 1,

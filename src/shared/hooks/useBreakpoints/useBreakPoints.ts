@@ -8,7 +8,7 @@ export enum ScreenWidth {
   "xl" = 1920,
 }
 
-class Breakpoints {
+export class Breakpoints {
   _screenWidth: ScreenWidth;
 
   constructor(screenWidth: ScreenWidth) {

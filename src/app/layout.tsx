@@ -3,10 +3,10 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { ConfigProvider } from "antd";
-import { primaryTheme } from "@/shared/config/themes/primaryTheme";
 // Локализация компонентов
 import ru_RU from "antd/lib/locale/ru_RU";
 import dayjs from "dayjs";
+import { primaryTheme } from "@/shared/config/themes/primaryTheme";
 
 // для локализации календаря
 dayjs.locale("ru");

@@ -6,6 +6,7 @@ import { Layout, theme } from "antd";
 import { AppMenu } from "@/shared/UI/AppMenu";
 import { AppFooter } from "@/shared/UI/AppFooter";
 import { LayoutSiderScreenStyle } from "@/app/(private-routes)/layoutSiderScreenStyle";
+import useBreakpoint from "@/shared/hooks/useBreakpoints/useBreakPoints";
 
 /**
  * Layout для страниц авторизованного пользователя
@@ -18,10 +19,17 @@ export default function UserLayout({
   children: React.ReactNode;
 }) {
   const { token } = theme.useToken();
+  const breakpoints = useBreakpoint();
 
   return (
     <Layout>
-      <Header>
+      <Header
+        style={{
+          height: breakpoints.xs || breakpoints.sm ? 50 : 70,
+          lineHeight: 1,
+          alignContent: "center",
+        }}
+      >
         <AppHeader />
       </Header>
       <Content
@@ -50,8 +58,8 @@ export default function UserLayout({
         style={{
           textAlign: "center",
           color: "whitesmoke",
-          height: 70,
-          paddingTop: 25,
+          height: breakpoints.xs || breakpoints.sm ? 50 : 70,
+          alignContent: "center",
         }}
       >
         <AppFooter />

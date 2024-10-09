@@ -16,13 +16,13 @@ export const LayoutSiderScreenStyle = (): ScreenStyle<SiderProps> => {
     },
     componentProps: {
       width: (() => {
-        if (screenWidth.xs) return 50;
-        if (screenWidth.sm) return 100;
-        if (screenWidth.md) return 150;
-        if (screenWidth.lg || screenWidth.xl) return 200;
-
-        // По умолчанию
-        return 100;
+        return 200;
+      })(),
+      collapsed: (() => {
+        return screenWidth.xs || screenWidth.sm;
+      })(),
+      collapsedWidth: (() => {
+        return 50;
       })(),
     },
   };
