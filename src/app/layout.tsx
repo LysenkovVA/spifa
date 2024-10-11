@@ -3,10 +3,11 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { ConfigProvider } from "antd";
-// Локализация компонентов
 import ru_RU from "antd/lib/locale/ru_RU";
 import dayjs from "dayjs";
 import { primaryTheme } from "@/shared/config/themes/primaryTheme";
+import { StoreProvider } from "@/shared/lib/StoreProvider";
+import { SessionProvider } from "next-auth/react";
 
 // для локализации календаря
 dayjs.locale("ru");
@@ -35,10 +36,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {/*Ant Design config provider*/}
-        <ConfigProvider locale={ru_RU} theme={primaryTheme}>
-          <AntdRegistry>{children}</AntdRegistry>
-        </ConfigProvider>
+        <SessionProvider>
+          <StoreProvider>
+            {/*Ant Design config provider*/}
+            <ConfigProvider locale={ru_RU} theme={primaryTheme}>
+              <AntdRegistry>{children}</AntdRegistry>
+            </ConfigProvider>
+          </StoreProvider>
+        </SessionProvider>
       </body>
     </html>
   );

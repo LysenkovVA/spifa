@@ -1,0 +1,112 @@
+// Сущности относящиеся к пользователям
+
+model Client {
+  id    String @id @default(cuid())
+  name  String
+  email String
+  phone String
+
+  user      User[]
+  userRoles UserRole[]
+  companies Company[]
+
+  @@index([email])
+  @@map("clients")
+}
+
+model User {
+  id       String @id @default(cuid())
+  email    String
+  password String
+
+  // Пользователь, который относится к клиенту
+  client   Client?            @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  clientId String?
+  // Роль на уровне БД
+  dBRole   DBRole?            @relation(fields: [dBRoleId], references: [id], onDelete: Cascade)
+  dBRoleId String?
+  roles    UsersOnUserRoles[]
+
+  @@index([email])
+  @@map("users")
+}
+
+model UsersOnUserRoles {
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+  userRole   UserRole @relation(fields: [userRoleId], references: [id])
+  userRoleId String
+
+  @@id([userRoleId, userId])
+  @@map("users_on_user_roles")
+}
+
+// Роль на уровне БД
+model DBRole {
+  id   String @id @default(cuid())
+  name String @unique
+
+  users       User[]
+  permissions DBRoleOnDBRolePermission[]
+
+  @@index([name])
+  @@map("db_roles")
+}
+
+model DBRoleOnDBRolePermission {
+  dBRole             DBRole           @relation(fields: [dBRoleId], references: [id], onDelete: Cascade)
+  dBRoleId           String
+  dBRolePermission   DBRolePermission @relation(fields: [dBRolePermissionId], references: [id], onDelete: Cascade)
+  dBRolePermissionId String
+
+  @@id([dBRoleId, dBRolePermissionId])
+  @@map("db_roles_on_db_role_permissions")
+}
+
+// Разрешения пользователя на уровне БД
+model DBRolePermission {
+  id      String                     @id @default(cuid())
+  name    String                     @unique
+  dBRoles DBRoleOnDBRolePermission[]
+
+  @@index([name])
+  @@map("db_role_permissions")
+}
+
+// Роль пользователя внутри клиента
+model UserRole {
+  id   String @id @default(cuid())
+  name String @unique
+
+  // Клиент, к которому относится роль
+  client      Client?                    @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  clientId    String?
+  permissions UserRoleOnUserPermission[]
+  users       UsersOnUserRoles[]
+
+  @@index([name])
+  @@map("user_roles")
+}
+
+model UserRoleOnUserPermission {
+  userRole         UserRole       @relation(fields: [userRoleId], references: [id], onDelete: Cascade)
+  userRoleId       String
+  userPermission   UserPermission @relation(fields: [userPermissionId], references: [id], onDelete: Cascade)
+  userPermissionId String
+  allowRead        Boolean
+  allowWrite       Boolean
+  allowDelete      Boolean
+
+  @@id([userRoleId, userPermissionId])
+  @@map("user_roles_on_user_permissions")
+}
+
+model UserPermission {
+  id   String @id @default(cuid())
+  name String @unique
+
+  userRoles UserRoleOnUserPermission[]
+
+  @@index([name])
+  @@map("user_permissions")
+}

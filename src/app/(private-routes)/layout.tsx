@@ -5,8 +5,8 @@ import Sider from "antd/es/layout/Sider";
 import { Layout, theme } from "antd";
 import { AppMenu } from "@/shared/UI/AppMenu";
 import { AppFooter } from "@/shared/UI/AppFooter";
-import { LayoutSiderScreenStyle } from "@/app/(private-routes)/layoutSiderScreenStyle";
-import useBreakpoint from "@/shared/hooks/useBreakpoints/useBreakPoints";
+import useScreenWidth from "@/shared/hooks/useScreenWidth/useScreenWidth";
+import { ReactNode } from "react";
 
 /**
  * Layout для страниц авторизованного пользователя
@@ -16,16 +16,16 @@ import useBreakpoint from "@/shared/hooks/useBreakpoints/useBreakPoints";
 export default function UserLayout({
   children, // will be a page or nested layout
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   const { token } = theme.useToken();
-  const breakpoints = useBreakpoint();
+  const screenWidth = useScreenWidth();
 
   return (
     <Layout>
       <Header
         style={{
-          height: breakpoints.xs || breakpoints.sm ? 50 : 70,
+          height: screenWidth.xs || screenWidth.sm ? 50 : 70,
           lineHeight: 1,
           alignContent: "center",
         }}
@@ -39,8 +39,17 @@ export default function UserLayout({
       >
         <Layout>
           <Sider
-            style={LayoutSiderScreenStyle().cssProperties}
-            {...LayoutSiderScreenStyle().componentProps}
+            style={{
+              borderColor: token.colorBorder,
+              borderRadius: token.borderRadius,
+              borderWidth: 1,
+              height: `calc(100vh - 2 * ${token.Layout?.headerHeight}px - 16px)`,
+              margin: "8px 0px 8px 8px",
+              width: screenWidth.xs || screenWidth.sm ? 50 : 200,
+            }}
+            width={200}
+            collapsed={screenWidth.xs || screenWidth.sm}
+            collapsedWidth={50}
           >
             <AppMenu />
           </Sider>
@@ -58,7 +67,7 @@ export default function UserLayout({
         style={{
           textAlign: "center",
           color: "whitesmoke",
-          height: breakpoints.xs || breakpoints.sm ? 50 : 70,
+          height: screenWidth.xs || screenWidth.sm ? 50 : 70,
           alignContent: "center",
         }}
       >

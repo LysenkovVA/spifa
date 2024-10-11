@@ -7,7 +7,6 @@ import { useMenuItems } from "@/shared/UI/AppMenu/hooks/useMenuItems";
 const AppMenu = () => {
   const pathname = usePathname();
   const router = useRouter();
-
   const { token } = theme.useToken();
 
   const [menuItems, menuArray] = useMenuItems();
@@ -15,7 +14,6 @@ const AppMenu = () => {
   return (
     <Menu
       mode="inline"
-      inlineCollapsed={false}
       defaultSelectedKeys={[
         menuArray.find((item) => item.target === pathname)?.key?.toString() ||
           String(1),
@@ -38,7 +36,6 @@ const AppMenu = () => {
         const { target } =
           menuArray.find((item) => item.key === menuInfo.key) || {};
         if (target) {
-          // window.open(target, "_blank");
           router.push(target);
         }
       }}

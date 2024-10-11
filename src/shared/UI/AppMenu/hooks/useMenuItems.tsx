@@ -10,12 +10,12 @@ import {
   TransactionOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import useBreakpoint from "@/shared/hooks/useBreakpoints/useBreakPoints";
+import useScreenWidth from "@/shared/hooks/useScreenWidth/useScreenWidth";
 
 type MenuItem = Required<MenuProps>["items"][number] & { target?: string };
 
 export const useMenuItems = () => {
-  const breakpoints = useBreakpoint();
+  const screenWidth = useScreenWidth();
 
   const paymentMenuItem: MenuItemType & { target?: string } = {
     key: "1",
@@ -47,7 +47,7 @@ export const useMenuItems = () => {
 
   const menuItems: MenuItem[] = [paymentMenuItem, listsMenuSubItem];
 
-  if (breakpoints.xs) {
+  if (screenWidth.xs) {
     const profileMenuItem: MenuItemType & { target?: string } = {
       key: "100",
       label: `Профиль`,

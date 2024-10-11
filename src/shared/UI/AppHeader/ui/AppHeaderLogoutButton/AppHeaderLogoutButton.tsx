@@ -2,18 +2,23 @@
 
 import { Button } from "antd";
 import { LogoutOutlined } from "@ant-design/icons";
-import useBreakpoint from "@/shared/hooks/useBreakpoints/useBreakPoints";
+import useScreenWidth from "@/shared/hooks/useScreenWidth/useScreenWidth";
+import { signOutAction } from "@/app/api/auth/sign-out.action";
 
 const AppHeaderLogoutButton = () => {
-  const breakpoints = useBreakpoint();
+  const screenWidth = useScreenWidth();
 
-  if (breakpoints.xs || breakpoints.sm) {
+  if (screenWidth.xs || screenWidth.sm) {
     return (
       <Button
         icon={<LogoutOutlined />}
         type="primary"
         style={{ backgroundColor: "#FFF4B5", color: "black" }}
         size={"large"}
+        onClick={async () => {
+          console.log("Logout...");
+          await signOutAction();
+        }}
       />
     );
   }
@@ -23,6 +28,10 @@ const AppHeaderLogoutButton = () => {
       icon={<LogoutOutlined />}
       type="primary"
       style={{ backgroundColor: "#FFF4B5", color: "black" }}
+      onClick={async () => {
+        console.log("Logout...");
+        await signOutAction();
+      }}
     >
       {"Выйти"}
     </Button>

@@ -2,25 +2,27 @@
 
 import { Avatar, Flex, Typography } from "antd";
 import { UserOutlined } from "@ant-design/icons";
-import useBreakpoint from "@/shared/hooks/useBreakpoints/useBreakPoints";
+import useScreenWidth from "@/shared/hooks/useScreenWidth/useScreenWidth";
+import { useSession } from "next-auth/react";
 
 const AppHeaderAvatar = () => {
-  const breakpoints = useBreakpoint();
+  const screenWidth = useScreenWidth();
+  const { data: session } = useSession();
 
   return (
     <Flex align={"center"} justify={"center"} gap={4}>
-      {(breakpoints.lg || breakpoints.xl) && (
+      {(screenWidth.lg || screenWidth.xl) && (
         <Typography.Text
           type={"secondary"}
           style={{ color: "#FFD7C4", fontSize: 14 }}
         >
-          {"Иванов И.И."}
+          {session?.user?.email}
         </Typography.Text>
       )}
-      {(breakpoints.sm ||
-        breakpoints.md ||
-        breakpoints.lg ||
-        breakpoints.xl) && (
+      {(screenWidth.sm ||
+        screenWidth.md ||
+        screenWidth.lg ||
+        screenWidth.xl) && (
         <Avatar
           size={"large"}
           shape={"circle"}

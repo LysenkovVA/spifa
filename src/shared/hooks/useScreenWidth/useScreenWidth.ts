@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export enum ScreenWidth {
+export enum ScreenSize {
   "xs" = 0,
   "sm" = 600,
   "md" = 960,
@@ -8,39 +8,39 @@ export enum ScreenWidth {
   "xl" = 1920,
 }
 
-export class Breakpoints {
-  _screenWidth: ScreenWidth;
+export class ScreenWidth {
+  readonly _screenSize: ScreenSize;
 
-  constructor(screenWidth: ScreenWidth) {
-    this._screenWidth = screenWidth;
+  constructor(screenWidth: ScreenSize) {
+    this._screenSize = screenWidth;
   }
 
   get xs() {
-    return this._screenWidth === ScreenWidth.xs;
+    return this._screenSize === ScreenSize.xs;
   }
 
   get sm() {
-    return this._screenWidth === ScreenWidth.sm;
+    return this._screenSize === ScreenSize.sm;
   }
 
   get md() {
-    return this._screenWidth === ScreenWidth.md;
+    return this._screenSize === ScreenSize.md;
   }
 
   get lg() {
-    return this._screenWidth === ScreenWidth.lg;
+    return this._screenSize === ScreenSize.lg;
   }
 
   get xl() {
-    return this._screenWidth === ScreenWidth.xl;
+    return this._screenSize === ScreenSize.xl;
   }
 }
 
 /**
  * Хук для определения размера экрана устройства
  */
-const useBreakpoint = () => {
-  const [breakpoint, setBreakPoint] = useState<ScreenWidth>(0);
+const useScreenWidth = () => {
+  const [breakpoint, setBreakPoint] = useState<ScreenSize>(0);
   const [windowSize, setWindowSize] = useState({
     width: 0,
     height: 0,
@@ -75,7 +75,7 @@ const useBreakpoint = () => {
 
     return () => window.removeEventListener("resize", handleResize);
   }, [windowSize.width]);
-  return new Breakpoints(breakpoint);
+  return new ScreenWidth(breakpoint);
 };
 
-export default useBreakpoint;
+export default useScreenWidth;

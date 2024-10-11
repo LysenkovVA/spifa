@@ -2,10 +2,10 @@
 
 import { Flex, Image } from "antd";
 import logo from "@/shared/assets/png/logo.png";
-import useBreakpoint from "@/shared/hooks/useBreakpoints/useBreakPoints";
+import useScreenWidth from "@/shared/hooks/useScreenWidth/useScreenWidth";
 
 const AppHeaderLogo = () => {
-  const breakpoints = useBreakpoint();
+  const screenWidth = useScreenWidth();
 
   return (
     <Flex align={"center"} justify={"center"} gap={4}>
@@ -13,7 +13,7 @@ const AppHeaderLogo = () => {
         src={logo.src}
         alt={"logo"}
         preview={false}
-        width={breakpoints.xs || breakpoints.sm ? 100 : 208}
+        width={screenWidth.xs || screenWidth.sm ? 100 : 208}
       />
     </Flex>
   );
