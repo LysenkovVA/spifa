@@ -44,7 +44,10 @@ export const authConfig: NextAuthConfig = {
           where: {
             email: credentials.email,
           },
-          // include: { role: true, profile: true },
+          include: {
+            client: true,
+            roles: { include: { userRole: true } },
+          },
         });
 
         if (!candidate) {
@@ -72,6 +75,11 @@ export const authConfig: NextAuthConfig = {
         if (user) {
           token.id = user.id!;
           token.email = user.email!;
+          token.surname = user.surname;
+          token.name = user.name;
+          token.phone = user.phone;
+          token.roles = user.roles;
+          token.client = user.client;
           // token.role = user.role;
           // token.profile = user.profile;
         }
@@ -86,7 +94,13 @@ export const authConfig: NextAuthConfig = {
       try {
         if (session.user) {
           session.user.id = token.id;
-          session.user.email = token.email;
+          session.user.email = token.email!;
+          session.user.surname = token.surname;
+          session.user.name = token.name!;
+          session.user.phone = token.phone!;
+          session.user.roles = token.roles;
+          session.user.client = token.client;
+
           // session.user.role = token.role;
           // session.user.profile = token.profile;
         }

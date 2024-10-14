@@ -1,8 +1,8 @@
-import { CompanySchema } from "@/entities/Company";
+import { CompanyDetailsSchema } from "@/entities/Company";
 
 export interface StateSchema {
   // Асинхронные (подключаются динамически по мере надобности)
-  companyDetails?: CompanySchema;
+  companyDetails?: CompanyDetailsSchema;
 }
 
 export type StateSchemaKey = keyof StateSchema;

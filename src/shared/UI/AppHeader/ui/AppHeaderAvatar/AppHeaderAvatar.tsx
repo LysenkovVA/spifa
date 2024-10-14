@@ -4,13 +4,21 @@ import { Avatar, Flex, Typography } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import useScreenWidth from "@/shared/hooks/useScreenWidth/useScreenWidth";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const AppHeaderAvatar = () => {
   const screenWidth = useScreenWidth();
   const { data: session } = useSession();
+  const router = useRouter();
 
   return (
-    <Flex align={"center"} justify={"center"} gap={4}>
+    <Flex
+      align={"center"}
+      justify={"center"}
+      gap={4}
+      style={{ cursor: "pointer" }}
+      onClick={() => router.push("/profile")}
+    >
       {(screenWidth.lg || screenWidth.xl) && (
         <Typography.Text
           type={"secondary"}

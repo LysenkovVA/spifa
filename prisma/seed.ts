@@ -44,6 +44,9 @@ async function main() {
     data: {
       email: "admin@ozon.ru",
       password: bcrypt.hashSync("123456", 10),
+      surname: "Анохин",
+      name: "Сергей Петрович",
+      phone: "+74951234567",
       client: { connect: client },
       dBRole: { connect: dbUserRole },
       roles: {

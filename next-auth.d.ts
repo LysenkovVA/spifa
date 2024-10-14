@@ -2,6 +2,7 @@
  * Расширение стандартных интерфейсов AuthJS
  */
 
+import { User as UserEntity } from "@/entities/User";
 import { DefaultJWT } from "next-auth/jwt";
 
 /**
@@ -10,21 +11,22 @@ import { DefaultJWT } from "next-auth/jwt";
 
 export declare module "next-auth" {
   interface Session {
-    user: {
-      id: string;
-      email: string;
-    };
+    // user: {
+    //   id: string;
+    //   email: string;
+    // };
+    user: UserEntity;
   }
 
-  interface User {
-    id: string;
-    email: string;
+  interface User extends UserEntity {
+    // id: string;
+    // email: string;
   }
 }
 
 export declare module "next-auth/jwt" {
-  interface JWT extends DefaultJWT {
-    id: string;
-    email: string;
+  interface JWT extends UserEntity, DefaultJWT {
+    // id: string;
+    // email: string;
   }
 }

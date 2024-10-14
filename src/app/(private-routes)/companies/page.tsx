@@ -1,24 +1,6 @@
-import { Breadcrumb } from "antd";
-import {
-  BreadcrumbItemType,
-  BreadcrumbSeparatorType,
-} from "antd/es/breadcrumb/Breadcrumb";
-import { CompaniesTable } from "@/features/Companies/CompaniesTable";
 import { auth } from "../../../../auth";
 import { redirect } from "next/navigation";
-
-const breadcrumbs:
-  | Partial<BreadcrumbItemType & BreadcrumbSeparatorType>[]
-  | undefined = [
-  {
-    title: "Списки",
-    // href: "/companies",
-  },
-  {
-    title: "Компании",
-    // href: "/companies",
-  },
-];
+import { CompaniesPageUI } from "@/features/Companies/CompaniesPageUI";
 
 export default async function CompaniesPage() {
   const session = await auth();
@@ -27,14 +9,5 @@ export default async function CompaniesPage() {
     redirect("/denied");
   }
 
-  return (
-    <>
-      <Breadcrumb
-        style={{ paddingBottom: 16 }}
-        items={breadcrumbs}
-        separator={">"}
-      />
-      <CompaniesTable data={undefined} />
-    </>
-  );
+  return <CompaniesPageUI />;
 }

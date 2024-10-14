@@ -1,6 +1,6 @@
-import { Alert } from "antd";
 import { auth } from "../../../../auth";
 import { redirect } from "next/navigation";
+import { EditableProfileCard } from "@/features/Profiles/EditableProfileCard";
 
 export default async function ProfilePage() {
   const session = await auth();
@@ -9,12 +9,5 @@ export default async function ProfilePage() {
     redirect("/denied");
   }
 
-  return (
-    <Alert
-      message="В разработке"
-      description="Здесь будет профиль пользователя"
-      type="info"
-      showIcon
-    />
-  );
+  return <EditableProfileCard />;
 }

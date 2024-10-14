@@ -15,9 +15,13 @@ model Client {
 }
 
 model User {
-  id       String @id @default(cuid())
-  email    String
-  password String
+  id        String  @id @default(cuid())
+  email     String
+  password  String
+  surname   String?
+  name      String?
+  phone     String?
+  avatarUrl String?
 
   // Пользователь, который относится к клиенту
   client   Client?            @relation(fields: [clientId], references: [id], onDelete: Cascade)
