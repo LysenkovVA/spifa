@@ -42,7 +42,7 @@ const EditableProfileCard = () => {
       title={
         <Flex align={"center"} justify={"space-between"}>
           <Typography.Text>{"Мой профиль"}</Typography.Text>
-          {isEdit ? editTitleButtons : nonEditTitleButtons}
+          {/*{isEdit ? editTitleButtons : nonEditTitleButtons}*/}
         </Flex>
       }
     >
