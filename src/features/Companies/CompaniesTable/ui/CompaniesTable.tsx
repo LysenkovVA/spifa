@@ -1,20 +1,40 @@
 "use client";
 
-import { Table, TableProps } from "antd";
+import { Space, Table, TableProps, Typography } from "antd";
 import { Company } from "@/entities/Company";
+import { EditCompanyButton } from "@/features/Companies/EditCompanyButton";
+import { EditOutlined } from "@ant-design/icons";
+import { DeleteCompanyButton } from "@/features/Companies/DeleteCompanyButton";
 
 const columns: TableProps<Company>["columns"] = [
   {
     title: "Название",
-    dataIndex: "company_name",
-    key: "company_name",
-    render: (text) => <a>{text}</a>,
+    dataIndex: "name",
+    key: "name",
+    render: (text) => <Typography.Text>{text}</Typography.Text>,
   },
   {
     title: "ИНН",
     dataIndex: "inn",
     key: "inn",
-    render: (text) => <a>{text}</a>,
+    render: (text) => <Typography.Text>{text}</Typography.Text>,
+  },
+  {
+    title: "",
+    dataIndex: "actions",
+    key: "actions",
+    width: "40px",
+
+    render: (_, record) => (
+      <Space size={"small"}>
+        <EditCompanyButton
+          companyId={record.id}
+          title={""}
+          icon={<EditOutlined />}
+        />
+        <DeleteCompanyButton companyId={record.id} />
+      </Space>
+    ),
   },
 ];
 
@@ -28,8 +48,19 @@ const CompaniesTable = (props: CompanyTableProps) => {
   return (
     <Table<Company>
       columns={columns}
+      onRow={(record, rowIndex) => {
+        return {
+          onClick: (event) => {}, // click row
+          onDoubleClick: (event) => {}, // double click row
+          onContextMenu: (event) => {}, // right button click row
+          onMouseEnter: (event) => {}, // mouse enter row
+          onMouseLeave: (event) => {}, // mouse leave row
+        };
+      }}
       // pagination={{ position: [top, bottom] }}
       dataSource={data}
+      rowKey={(record) => record.id}
+      pagination={false}
     />
   );
 };

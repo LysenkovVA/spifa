@@ -1,6 +1,6 @@
 import { auth } from "../../../../auth";
 import { redirect } from "next/navigation";
-import { CompaniesPageUI } from "@/features/Companies/CompaniesPageUI";
+import { CompaniesPageUI } from "@/widgets/CompaniesPageUI";
 
 export default async function CompaniesPage() {
   const session = await auth();

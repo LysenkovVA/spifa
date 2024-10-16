@@ -11,7 +11,7 @@ export async function updateCompany(
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(document),
+      body: JSON.stringify(company),
     },
   );
 

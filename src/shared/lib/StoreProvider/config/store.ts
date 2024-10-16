@@ -1,14 +1,14 @@
 import { configureStore, Reducer } from "@reduxjs/toolkit";
 import { createReducerManager, TStore } from "./ReducerManager";
 import { StateSchema } from "./StateSchema";
+import { companiesReducer } from "@/features/Companies/CompaniesTable";
 
 export const makeStore = () => {
   // Чтобы не было ошибки при загрузке приложения, о том что не иницилизирован Store,
   // нужно добавить редюсеры
   // Также уходит warning по селекторам
   const reducerManager = createReducerManager({
-    // blanksList: blanksListReducer,
-    // documentsList: documentsListReducer,
+    companies: companiesReducer,
   });
 
   const store = configureStore({
