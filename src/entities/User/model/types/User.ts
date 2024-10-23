@@ -1,5 +1,5 @@
-import { Client } from "@/entities/Client";
-import { UsersOnUserRoles } from "@/entities/UsersOnUserRoles";
+import { DBRole } from "@prisma/client";
+import { ClientsOnUsers } from "@/entities/ClientsOnUsers";
 
 export interface User {
   id: string;
@@ -9,7 +9,6 @@ export interface User {
   name?: string;
   phone?: string;
   avatarUrl?: string;
-  clientId?: string;
-  client?: Client;
-  roles?: UsersOnUserRoles[];
+  clients?: ClientsOnUsers[];
+  dbRoles?: Array<DBRole>;
 }

@@ -11,22 +11,12 @@ import { DefaultJWT } from "next-auth/jwt";
 
 export declare module "next-auth" {
   interface Session {
-    // user: {
-    //   id: string;
-    //   email: string;
-    // };
     user: UserEntity;
   }
 
-  interface User extends UserEntity {
-    // id: string;
-    // email: string;
-  }
+  interface User extends UserEntity {}
 }
 
 export declare module "next-auth/jwt" {
-  interface JWT extends UserEntity, DefaultJWT {
-    // id: string;
-    // email: string;
-  }
+  interface JWT extends UserEntity, DefaultJWT {}
 }

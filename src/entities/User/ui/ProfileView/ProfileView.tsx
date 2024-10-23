@@ -44,30 +44,31 @@ const ProfileView = () => {
         </Space>
       </Flex>
 
-      <Divider orientation={"left"}>
-        <Space size={"middle"}>
-          <SafetyOutlined />
-          <Typography.Text type={"secondary"} style={{ fontSize: 16 }}>
-            {`Я в \"${session?.user.client?.name}\"`}
-          </Typography.Text>
-        </Space>
-      </Divider>
-      <Space size={"middle"}>
-        {session?.user?.roles?.map((role) => (
-          <Typography.Text
-            key={role.userRole?.name}
-            // type={"success"}
-            style={{
-              backgroundColor: "lightgreen",
-              border: "solid 1px black",
-              borderRadius: 12,
-              padding: 6,
-            }}
-          >
-            {role.userRole?.name}
-          </Typography.Text>
-        ))}
-      </Space>
+      {session?.user.clients?.map((clientOnUser) => (
+        <div key={clientOnUser.client?.id}>
+          <Divider orientation={"left"}>
+            <Space size={"middle"}>
+              <SafetyOutlined />
+              <Typography.Text type={"secondary"} style={{ fontSize: 16 }}>
+                {`Я в ${clientOnUser.client?.name}`}
+              </Typography.Text>
+            </Space>
+          </Divider>
+          <Space size={"middle"}>
+            <Typography.Text
+              // type={"success"}
+              style={{
+                backgroundColor: "lightgreen",
+                border: "solid 1px black",
+                borderRadius: 12,
+                padding: 6,
+              }}
+            >
+              {clientOnUser.clientUserRole}
+            </Typography.Text>
+          </Space>
+        </div>
+      ))}
     </>
   );
 };

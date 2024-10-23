@@ -5,7 +5,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { NextAuthConfig } from "next-auth";
 
 import bcrypt from "bcryptjs";
-import { User } from "@/entities/User";
+import { User as UserEntity } from "@/entities/User";
 
 export const authConfig: NextAuthConfig = {
   adapter: PrismaAdapter(prisma) as Adapter,
@@ -15,16 +15,13 @@ export const authConfig: NextAuthConfig = {
   session: {
     // Для Credentials поддерживается только эта стратегия
     strategy: "jwt",
-    maxAge: 1 * 24 * 60 * 60, // Set the session max age 1 days
-    // maxAge: 10, // 10 secs
+    maxAge: 24 * 60 * 60, // 1 день
   },
   secret: process.env.AUTH_SECRET,
   debug: true,
   providers: [
     Credentials({
       name: "Credentials",
-      // You can specify which fields should be submitted, by adding keys to the `credentials` object.
-      // e.g. domain, username, password, 2FA token, etc.
       credentials: {
         email: {
           label: "E-mail",
@@ -45,8 +42,9 @@ export const authConfig: NextAuthConfig = {
             email: credentials.email,
           },
           include: {
-            client: true,
-            roles: { include: { userRole: true } },
+            clients: { include: { client: true } },
+            // dBRole: true,
+            // roles: { include: { userRole: true } },
           },
         });
 
@@ -65,7 +63,7 @@ export const authConfig: NextAuthConfig = {
 
         const { password, ...userWithoutPass } = candidate;
 
-        return userWithoutPass as User;
+        return userWithoutPass as UserEntity;
       },
     }),
   ],
@@ -78,10 +76,8 @@ export const authConfig: NextAuthConfig = {
           token.surname = user.surname;
           token.name = user.name;
           token.phone = user.phone;
-          token.roles = user.roles;
-          token.client = user.client;
-          // token.role = user.role;
-          // token.profile = user.profile;
+          token.dbRoles = user.dbRoles;
+          token.clients = user.clients;
         }
         return token;
       } catch (error) {
@@ -98,11 +94,8 @@ export const authConfig: NextAuthConfig = {
           session.user.surname = token.surname;
           session.user.name = token.name!;
           session.user.phone = token.phone!;
-          session.user.roles = token.roles;
-          session.user.client = token.client;
-
-          // session.user.role = token.role;
-          // session.user.profile = token.profile;
+          session.user.dbRoles = token.dbRoles;
+          session.user.clients = token.clients;
         }
 
         return session;

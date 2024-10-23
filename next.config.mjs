@@ -10,7 +10,8 @@ const nextConfig = {
    * https://nextjs.org/docs/api-reference/next.config.js/custom-webpack-config
    */
   webpack(config, options) {
-    const { dev, isServer, nextConfig } = options;
+    const { buildId, dev, isServer, defaultLoaders, nextRuntime, webpack } =
+      options;
 
     // Do not run type checking twice:
     if (dev && isServer) {

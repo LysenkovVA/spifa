@@ -10,11 +10,14 @@ export default async function PaymentsPage() {
   }
 
   return (
-    <Alert
-      message="В разработке"
-      description="Здесь будут заявки на оплату"
-      type="info"
-      showIcon
-    />
+    <>
+      {/*{JSON.stringify(session?.user, null, 2)}*/}
+      <Alert
+        message="В разработке"
+        description="Здесь будут заявки на оплату"
+        type="info"
+        showIcon
+      />
+    </>
   );
 }

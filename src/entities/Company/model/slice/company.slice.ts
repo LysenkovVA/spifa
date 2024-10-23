@@ -2,7 +2,6 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Company } from "../types/Company";
 import { CompanyDetailsSchema } from "../types/CompanyDetailsSchema";
 import { fetchCompanyByIdService } from "../services/fetchCompanyById.service";
-import { notification } from "antd";
 
 const initialState: CompanyDetailsSchema = {
   data: undefined,
@@ -44,12 +43,12 @@ export const companySlice = createSlice({
         state.data = undefined;
         state.formData = undefined;
 
-        notification.error({
-          message: action.payload,
-          closable: false,
-          placement: "top",
-          duration: 5,
-        });
+        // notification.error({
+        //   message: action.payload,
+        //   closable: false,
+        //   placement: "top",
+        //   duration: 5,
+        // });
       });
   },
 });

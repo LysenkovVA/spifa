@@ -1,0 +1,90 @@
+// Клиенты, работающие с системой "СПИФА"
+// Клиенты добавляются администратором системы "СПИФА" на платной основе
+model Client {
+  id      String  @id @default(cuid())
+  name    String
+  address String?
+  phone   String?
+
+  // Список пользователей клиента
+  users ClientsOnUsers[]
+
+  // Список: "Компании"
+  companies Company[]
+
+  // Служебные поля
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([address, phone])
+  @@map("clients")
+}
+
+// Возможные роли внутри клиента системы "СПИФА"
+// Роли пополняются разработчиками системы "СПИФА"
+enum ClientUserRole {
+  ADMINISTRATOR // Администратор
+  EMPLOYEE // Работник
+}
+
+// Названия и описание разрешений в системе "СПИФА"
+// Таблица содержит все доступные разрешения в системе "СПИФА"
+// Таблица пополняется разработчиками системы "СПИФА"
+model ClientPermission {
+  id          String       @id @default(cuid())
+  // Название
+  name        String       @unique
+  // Описание
+  description String?
+  Permission  Permission[]
+
+  // Служебные поля
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([name, description])
+  @@map("client_permissions")
+}
+
+model Permission {
+  id String @id @default(cuid())
+
+  // Доступное разрешение
+  clientPermission   ClientPermission @relation(fields: [clientPermissionId], references: [id])
+  clientPermissionId String
+
+  // Чтение
+  allowRead   Boolean @default(false)
+  // Запись
+  allowWrite  Boolean @default(false)
+  // Удаление
+  allowDelete Boolean @default(false)
+
+  clientsOnUsers         ClientsOnUsers? @relation(fields: [clientsOnUsersClientId, clientsOnUsersUserId], references: [clientId, userId], onDelete: Cascade)
+  clientsOnUsersClientId String?
+  clientsOnUsersUserId   String?
+
+  // Служебные поля
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("permissions")
+}
+
+model ClientsOnUsers {
+  // Клиент
+  client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  clientId String
+
+  // Пользователь
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  // Роль внутри клиента
+  clientUserRole ClientUserRole
+  // Разрешения
+  permissions    Permission[]
+
+  @@id([clientId, userId])
+  @@map("clients_on_users")
+}

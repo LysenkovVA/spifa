@@ -10,8 +10,9 @@ import {
   companyDetailsReducer,
 } from "./model/slice/company.slice";
 import { CompanyZSchema } from "./model/validation/CompanyZSchema";
+import { DaDataCompanyResponse } from "./model/types/DaDataCompanyInterfaces";
 
-export type { Company, CompanyDetailsSchema };
+export type { Company, CompanyDetailsSchema, DaDataCompanyResponse };
 export {
   CompanyForm,
   createCompany,

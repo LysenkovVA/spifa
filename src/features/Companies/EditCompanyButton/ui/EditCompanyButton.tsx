@@ -6,7 +6,9 @@ import {
   Drawer,
   Flex,
   Form,
+  notification,
   Space,
+  Spin,
   Typography,
 } from "antd";
 import { CloseOutlined, SaveOutlined } from "@ant-design/icons";
@@ -18,6 +20,7 @@ import {
   createCompanyService,
   fetchCompanyByIdService,
   getCompanyDetails,
+  getCompanyDetailsIsLoading,
   updateCompanyService,
 } from "@/entities/Company";
 import { useAppDispatch } from "@/shared/lib/StoreProvider";
@@ -46,6 +49,9 @@ export interface EditCompanyButtonProps extends ButtonProps {
 const EditCompanyButton = (props: EditCompanyButtonProps) => {
   const { title = "Кнопка", icon, companyId, ...restProps } = props;
 
+  // const { notification } = App.useApp();
+  const [notificationApi, contextHolder] = notification.useNotification();
+
   const [form] = Form.useForm();
   const screenWidth = useScreenWidth();
 
@@ -53,12 +59,24 @@ const EditCompanyButton = (props: EditCompanyButtonProps) => {
 
   const dispatch = useAppDispatch();
   const initialValues = useSelector(getCompanyDetails);
+  const isLoading = useSelector(getCompanyDetailsIsLoading);
 
   useEffect(() => {
     if (isEdit && companyId) {
       dispatch(fetchCompanyByIdService({ id: companyId }));
     }
+    // else {
+    //   dispatch(companyDetailsActions.clearAllData);
+    // }
   }, [companyId, dispatch, isEdit]);
+
+  const loadData = useCallback(() => {
+    if (companyId) {
+      dispatch(fetchCompanyByIdService({ id: companyId })).then((data) => {
+        setIsEdit(true);
+      });
+    }
+  }, [companyId, dispatch]);
 
   const onFinish = useCallback(
     async (values: Company) => {
@@ -68,6 +86,19 @@ const EditCompanyButton = (props: EditCompanyButtonProps) => {
         ).unwrap();
         if (request.isOk) {
           setIsEdit(false);
+          notificationApi.success({
+            message: `Данные компании "${request.data.name}" обновлены!`,
+            closable: false,
+            placement: "top",
+            duration: 3,
+          });
+        } else {
+          notificationApi.error({
+            message: request.errorMessages,
+            closable: false,
+            placement: "top",
+            duration: 5,
+          });
         }
       } else {
         const request = await dispatch(
@@ -75,16 +106,29 @@ const EditCompanyButton = (props: EditCompanyButtonProps) => {
         ).unwrap();
         if (request.isOk) {
           setIsEdit(false);
+          notificationApi.success({
+            message: `Компания "${request.data.name}" создана!`,
+            closable: false,
+            placement: "top",
+            duration: 3,
+          });
+        } else {
+          notificationApi.error({
+            message: request.errorMessages,
+            closable: false,
+            placement: "top",
+            duration: 5,
+          });
         }
       }
     },
-    [companyId, dispatch],
+    [companyId, dispatch, notificationApi],
   );
 
   const drawerTitleContent = (
     <Flex align={"center"} justify={"space-between"}>
       <Typography.Text type={"secondary"} style={{ fontSize: 16 }}>
-        {initialValues?.name}
+        {initialValues?.name ?? "Компания"}
       </Typography.Text>
       <Space size={"small"}>
         <Button
@@ -110,10 +154,14 @@ const EditCompanyButton = (props: EditCompanyButtonProps) => {
 
   return (
     <>
+      {contextHolder}
       <Button
         icon={icon}
         type={"default"}
-        onClick={() => setIsEdit(true)}
+        onClick={() => {
+          setIsEdit(true);
+          // loadData();
+        }}
         {...restProps}
       >
         {screenWidth.xl || screenWidth.lg || screenWidth.md ? title : ""}
@@ -121,6 +169,7 @@ const EditCompanyButton = (props: EditCompanyButtonProps) => {
       {isEdit && (
         <DynamicModuleLoader reducers={reducers}>
           <Drawer
+            styles={{ wrapper: { height: "90%" } }}
             open={isEdit}
             closable={false}
             onClose={() => setIsEdit(false)}
@@ -128,11 +177,13 @@ const EditCompanyButton = (props: EditCompanyButtonProps) => {
             title={drawerTitleContent}
             destroyOnClose
           >
-            <CompanyForm
-              form={form}
-              initialValues={initialValues}
-              onFinish={onFinish}
-            />
+            <Spin spinning={isLoading}>
+              <CompanyForm
+                form={form}
+                initialValues={initialValues}
+                onFinish={onFinish}
+              />
+            </Spin>
           </Drawer>
         </DynamicModuleLoader>
       )}

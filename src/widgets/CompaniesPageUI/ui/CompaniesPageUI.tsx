@@ -5,6 +5,8 @@ import {
   CompaniesTable,
   fetchCompaniesService,
   getCompanies,
+  getCompaniesIsInitialized,
+  getCompaniesIsLoading,
 } from "@/features/Companies/CompaniesTable";
 import { PageWrapper } from "@/shared/UI/PageWrapper";
 import {
@@ -41,10 +43,14 @@ const reducers: ReducersList = {
 const CompaniesPageUI = () => {
   const dispatch = useAppDispatch();
   const companies = useSelector(getCompanies.selectAll);
+  const isInitialized = useSelector(getCompaniesIsInitialized);
+  const isLoading = useSelector(getCompaniesIsLoading);
 
   useEffect(() => {
-    dispatch(fetchCompaniesService({ replaceData: true }));
-  }, [dispatch]);
+    if (!isInitialized && !isLoading) {
+      dispatch(fetchCompaniesService({ replaceData: true }));
+    }
+  }, [dispatch, isInitialized, isLoading]);
 
   return (
     <DynamicModuleLoader reducers={reducers} removeAfterUnmount={false}>

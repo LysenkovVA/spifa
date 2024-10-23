@@ -8,15 +8,3 @@ datasource db {
   url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
-
-model Company {
-  id   String  @id @default(cuid())
-  name String
-  inn  String?
-
-  client   Client? @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  clientId String?
-
-  @@index([name, inn])
-  @@map("companies")
-}

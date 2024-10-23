@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { notification } from "antd";
 import { CompaniesSchema } from "../types/CompaniesSchema";
 import { fetchCompaniesService } from "@/features/Companies/CompaniesTable";
 import { companiesAdapter } from "@/features/Companies/CompaniesTable/model/adapter/companiesAdapter";
@@ -75,12 +74,12 @@ export const companiesSlice = createSlice({
           companiesAdapter.removeAll(state);
         }
 
-        notification.error({
-          message: action.payload,
-          closable: false,
-          placement: "top",
-          duration: 5,
-        });
+        // notification.error({
+        //   message: action.payload,
+        //   closable: false,
+        //   placement: "top",
+        //   duration: 5,
+        // });
       })
       // Добавление компании
       .addCase(createCompanyService.fulfilled, (state, action) => {
@@ -91,20 +90,20 @@ export const companiesSlice = createSlice({
           state.totalCount = 1;
         }
 
-        notification.success({
-          message: `Компания "${action.payload.data.name}" создана!`,
-          closable: false,
-          placement: "top",
-          duration: 3,
-        });
+        // notification.success({
+        //   message: `Компания "${action.payload.data.name}" создана!`,
+        //   closable: false,
+        //   placement: "top",
+        //   duration: 3,
+        // });
       })
       .addCase(createCompanyService.rejected, (state, action) => {
-        notification.error({
-          message: action.payload,
-          closable: false,
-          placement: "top",
-          duration: 5,
-        });
+        // notification.error({
+        //   message: action.payload,
+        //   closable: false,
+        //   placement: "top",
+        //   duration: 5,
+        // });
       })
       // Обновление данных компании
       .addCase(updateCompanyService.fulfilled, (state, action) => {
@@ -115,20 +114,20 @@ export const companiesSlice = createSlice({
           state.totalCount = 1;
         }
 
-        notification.success({
-          message: `Данные компании "${action.payload.data.name}" обновлены!`,
-          closable: false,
-          placement: "top",
-          duration: 3,
-        });
+        // notification.success({
+        //   message: `Данные компании "${action.payload.data.name}" обновлены!`,
+        //   closable: false,
+        //   placement: "top",
+        //   duration: 3,
+        // });
       })
       .addCase(updateCompanyService.rejected, (state, action) => {
-        notification.error({
-          message: action.payload,
-          closable: false,
-          placement: "top",
-          duration: 5,
-        });
+        // notification.error({
+        //   message: action.payload,
+        //   closable: false,
+        //   placement: "top",
+        //   duration: 5,
+        // });
       })
       // Удаление компании
       .addCase(deleteCompanyService.fulfilled, (state, action) => {
@@ -138,12 +137,12 @@ export const companiesSlice = createSlice({
         } else {
           state.totalCount = 0;
         }
-        notification.success({
-          message: `Компания "${action.payload.data.name}" удалена!`,
-          closable: false,
-          placement: "top",
-          duration: 3,
-        });
+        // notification.success({
+        //   message: `Компания "${action.payload.data.name}" удалена!`,
+        //   closable: false,
+        //   placement: "top",
+        //   duration: 3,
+        // });
       });
   },
 });

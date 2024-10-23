@@ -1,28 +1,29 @@
-import { MenuProps } from "antd";
+import { MenuProps, Space } from "antd";
 import {
   MenuDividerType,
+  MenuItemGroupType,
   MenuItemType,
-  SubMenuType,
 } from "antd/es/menu/interface";
 import {
   BankOutlined,
   OrderedListOutlined,
-  TransactionOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import useScreenWidth from "@/shared/hooks/useScreenWidth/useScreenWidth";
+
+export const DEFAULT_ROUTE = "/companies";
 
 type MenuItem = Required<MenuProps>["items"][number] & { target?: string };
 
 export const useMenuItems = () => {
   const screenWidth = useScreenWidth();
 
-  const paymentMenuItem: MenuItemType & { target?: string } = {
-    key: "1",
-    label: `Заявки на оплату`,
-    icon: <TransactionOutlined />,
-    target: "/payments",
-  };
+  // const paymentMenuItem: MenuItemType & { target?: string } = {
+  //   key: "1",
+  //   label: `Заявки на оплату`,
+  //   icon: <TransactionOutlined />,
+  //   target: "/payments",
+  // };
 
   const companiesMenuItem: MenuItemType & { target?: string } = {
     key: "3",
@@ -31,21 +32,39 @@ export const useMenuItems = () => {
     target: "/companies",
   };
 
-  const listsMenuSubItem: SubMenuType<MenuItemType> = {
+  // Подменю
+  // const listsMenuSubItem: SubMenuType<MenuItemType> = {
+  //   key: "2",
+  //   label: `Списки`,
+  //   icon: <OrderedListOutlined />,
+  //
+  //   children: [companiesMenuItem],
+  // };
+
+  // Группа
+  const listsMenuSubItem: MenuItemGroupType<MenuItemType> = {
     key: "2",
-    label: `Списки`,
-    icon: <OrderedListOutlined />,
+    label: (
+      <Space size={"small"}>
+        <OrderedListOutlined /> {"Списки"}
+      </Space>
+    ),
+    type: "group",
+    // icon: <OrderedListOutlined />,
 
     children: [companiesMenuItem],
   };
 
   const menuArray: MenuItem[] = [
-    paymentMenuItem,
+    // paymentMenuItem,
     listsMenuSubItem,
     companiesMenuItem,
   ];
 
-  const menuItems: MenuItem[] = [paymentMenuItem, listsMenuSubItem];
+  const menuItems: MenuItem[] = [
+    // paymentMenuItem,
+    listsMenuSubItem,
+  ];
 
   if (screenWidth.xs) {
     const profileMenuItem: MenuItemType & { target?: string } = {

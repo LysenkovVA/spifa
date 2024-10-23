@@ -8,12 +8,12 @@ const AppHeaderLogo = () => {
   const screenWidth = useScreenWidth();
 
   return (
-    <Flex align={"center"} justify={"center"} gap={4}>
+    <Flex align={"center"} justify={"center"} style={{ width: 208 }}>
       <Image
         src={logo.src}
         alt={"logo"}
         preview={false}
-        width={screenWidth.xs || screenWidth.sm ? 100 : 208}
+        width={screenWidth.xs || screenWidth.sm ? 100 : 150}
       />
     </Flex>
   );

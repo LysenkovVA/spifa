@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "../../../../../prisma/db";
-import { Prisma } from "@prisma/client";
+import { CompanyType, Prisma } from "@prisma/client";
 import { ServerResponse } from "@/shared/lib/responses/ServerResponse";
 import { Company, CompanyZSchema } from "@/entities/Company";
+import dayjs from "dayjs";
 
 /**
  * Создание нового документа
@@ -20,7 +21,32 @@ export async function POST(request: NextRequest) {
     // Данные запроса к БД
     const createQuery: Prisma.CompanyCreateInput = {
       name: validateCompany.name,
+      companyType: validateCompany.companyType as CompanyType,
+      management: validateCompany.management,
+      fio: validateCompany.fio,
+      opf: validateCompany.opf,
+      phone: validateCompany.phone,
+      address: validateCompany.address,
+      status: validateCompany.status,
       inn: validateCompany.inn,
+      kpp: validateCompany.kpp,
+      ogrn: validateCompany.ogrn,
+      ogrnDate: data.ogrnDate ? dayjs(data.ogrnDate).toDate() : null,
+      okato: validateCompany.okato,
+      okpo: validateCompany.okpo,
+      okfs: validateCompany.okfs,
+      oktmo: validateCompany.oktmo,
+      okogu: validateCompany.okogu,
+      okved: validateCompany.okved,
+      actualityDate: data.actualityDate
+        ? dayjs(data.actualityDate).toDate()
+        : null,
+      registrationDate: data.registrationDate
+        ? dayjs(data.registrationDate).toDate()
+        : null,
+      liquidationDate: data.liquidationDate
+        ? dayjs(data.liquidationDate).toDate()
+        : null,
     };
 
     // Создание новой записи в БД
