@@ -16,7 +16,7 @@ import logo from "@/shared/assets/png/logo.png";
 import { loginAction } from "@/app/api/auth/login.action";
 import { useState } from "react";
 import { getSession } from "next-auth/react";
-import { DEFAULT_ROUTE } from "@/shared/UI/AppMenu/hooks/useMenuItems";
+import { DEFAULT_ROUTE } from "@/widgets/AppMenu/hooks/useMenuItems";
 
 const LoginForm = () => {
   const router = useRouter();

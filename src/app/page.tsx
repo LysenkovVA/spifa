@@ -1,7 +1,7 @@
 import { LoginForm } from "@/features/Auth/LoginForm";
 import { auth } from "../../auth";
 import { redirect } from "next/navigation";
-import { DEFAULT_ROUTE } from "@/shared/UI/AppMenu/hooks/useMenuItems";
+import { DEFAULT_ROUTE } from "@/widgets/AppMenu/hooks/useMenuItems";
 
 export default async function LoginPage() {
   // Получаем сессию

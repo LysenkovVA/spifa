@@ -28,6 +28,8 @@ import CompanyDetailsSvg from "@/shared/assets/svg/CompanyDetails.svg";
 import ContactsSvg from "@/shared/assets/svg/Contacts.svg";
 import { CompanyNameInputWithSearch } from "@/features/Companies/CompanyNameInputWithSearch";
 import { Suggestion } from "@/entities/Company/model/types/DaDataCompanyInterfaces";
+import SearchableInnOrKppDigitInput from "@/features/Companies/SearchableINNDigitInput/ui/SearchableInnOrKppDigitInput";
+import useModal from "antd/es/modal/useModal";
 
 export interface CompanyFormProps {
   form?: FormInstance;
@@ -45,10 +47,80 @@ const CompanyForm = (props: CompanyFormProps) => {
 
   const [innLength, setInnLength] = useState<number>(10);
   const [showIP, setShowIP] = useState<boolean>(false);
+  const [modal2Open, setModal2Open] = useState(false);
+  const [modalApi, context] = useModal();
 
   useEffect(() => {
     form?.setFieldsValue(initialValues);
   }, [form, initialValues]);
+
+  /**
+   * Функция заполнения полей по выбранному названию
+   */
+  const onSelectChangedCompanyName = useCallback(
+    (value: Suggestion | undefined) => {
+      if (value) {
+        modalApi.confirm({
+          title: `Заполнить поля для компании ${value?.value}?`,
+          centered: true,
+          onClose: () => {
+            return;
+          },
+          onOk: () => {
+            form?.setFieldValue(["name"], value.value);
+            form?.setFieldValue(["type"], value.data.type);
+
+            switch (value.data.type) {
+              case "LEGAL":
+                form?.setFieldValue(["management"], value.data.management.name);
+                form?.setFieldValue(["fio"], null);
+                setShowIP(false);
+                setInnLength(10);
+                break;
+
+              case "INDIVIDUAL":
+                form?.setFieldValue(["management"], null);
+                form?.setFieldValue(
+                  ["fio"],
+                  `${value.data.fio.surname ?? ""} ${value.data.fio.name ?? ""} ${value.data.fio.patronymic ?? ""}`.trim(),
+                );
+                setShowIP(true);
+                setInnLength(12);
+                break;
+            }
+
+            form?.setFieldValue(["opf"], value.data.opf.full);
+            form?.setFieldValue(["phone"], value.data.phones);
+            form?.setFieldValue(["address"], value.data.address.value);
+            form?.setFieldValue(["status"], value.data.state.status);
+            form?.setFieldValue(["inn"], value.data.inn);
+            form?.setFieldValue(["kpp"], value.data.kpp);
+            form?.setFieldValue(["ogrn"], value.data.ogrn);
+            form?.setFieldValue(["ogrnDate"], value.data.ogrn_date);
+            form?.setFieldValue(["okato"], value.data.okato);
+            form?.setFieldValue(["okpo"], value.data.okpo);
+            form?.setFieldValue(["okfs"], value.data.okfs);
+            form?.setFieldValue(["oktmo"], value.data.oktmo);
+            form?.setFieldValue(["okogu"], value.data.okogu);
+            form?.setFieldValue(["okved"], value.data.okved);
+            form?.setFieldValue(
+              ["actualityDate"],
+              value.data.state.actuality_date,
+            );
+            form?.setFieldValue(
+              ["registrationDate"],
+              value.data.state.registration_date,
+            );
+            form?.setFieldValue(
+              ["liquidationDate"],
+              value.data.state.liquidation_date,
+            );
+          },
+        });
+      }
+    },
+    [form, modalApi],
+  );
 
   // Основные реквизиты (контент)
   const detailsContent = (
@@ -60,12 +132,20 @@ const CompanyForm = (props: CompanyFormProps) => {
             label={"ИНН"}
             rules={[{ required: true, message: "Не указан ИНН" }]}
           >
-            <DigitInput length={innLength} />
+            {/*<DigitInput length={innLength} />*/}
+            <SearchableInnOrKppDigitInput
+              digitsCount={innLength}
+              onGetSearchResult={onSelectChangedCompanyName}
+            />
           </Form.Item>
         </Col>
         <Col span={12}>
           <Form.Item name={"kpp"} label={"КПП"}>
             <DigitInput length={9} />
+            {/*<SearchableInnOrKppDigitInput*/}
+            {/*  digitsCount={9}*/}
+            {/*  onGetSearchResult={onSelectChangedCompanyName}*/}
+            {/*/>*/}
           </Form.Item>
         </Col>
       </Row>
@@ -202,62 +282,6 @@ const CompanyForm = (props: CompanyFormProps) => {
     return <Tabs size={"large"} items={tabItems} />;
   };
 
-  /**
-   * Функция заполнения полей по выбранному названию
-   */
-  const onSelectChangedCompanyName = useCallback(
-    (value: Suggestion | undefined) => {
-      if (value) {
-        form?.setFieldValue(["name"], value.value);
-        form?.setFieldValue(["type"], value.data.type);
-
-        switch (value.data.type) {
-          case "LEGAL":
-            form?.setFieldValue(["management"], value.data.management.name);
-            form?.setFieldValue(["fio"], null);
-            setShowIP(false);
-            setInnLength(10);
-            break;
-
-          case "INDIVIDUAL":
-            form?.setFieldValue(["management"], null);
-            form?.setFieldValue(
-              ["fio"],
-              `${value.data.fio.surname ?? ""} ${value.data.fio.name ?? ""} ${value.data.fio.patronymic ?? ""}`.trim(),
-            );
-            setShowIP(true);
-            setInnLength(12);
-            break;
-        }
-
-        form?.setFieldValue(["opf"], value.data.opf.full);
-        form?.setFieldValue(["phone"], value.data.phones);
-        form?.setFieldValue(["address"], value.data.address.value);
-        form?.setFieldValue(["status"], value.data.state.status);
-        form?.setFieldValue(["inn"], value.data.inn);
-        form?.setFieldValue(["kpp"], value.data.kpp);
-        form?.setFieldValue(["ogrn"], value.data.ogrn);
-        form?.setFieldValue(["ogrnDate"], value.data.ogrn_date);
-        form?.setFieldValue(["okato"], value.data.okato);
-        form?.setFieldValue(["okpo"], value.data.okpo);
-        form?.setFieldValue(["okfs"], value.data.okfs);
-        form?.setFieldValue(["oktmo"], value.data.oktmo);
-        form?.setFieldValue(["okogu"], value.data.okogu);
-        form?.setFieldValue(["okved"], value.data.okved);
-        form?.setFieldValue(["actualityDate"], value.data.state.actuality_date);
-        form?.setFieldValue(
-          ["registrationDate"],
-          value.data.state.registration_date,
-        );
-        form?.setFieldValue(
-          ["liquidationDate"],
-          value.data.state.liquidation_date,
-        );
-      }
-    },
-    [form, setInnLength, setShowIP],
-  );
-
   return (
     <Form
       id={"companyForm"}
@@ -275,6 +299,7 @@ const CompanyForm = (props: CompanyFormProps) => {
         padding: "0 16px",
       }}
     >
+      {context}
       {/*НАЗВАНИЕ*/}
       <Form.Item
         name={"name"}

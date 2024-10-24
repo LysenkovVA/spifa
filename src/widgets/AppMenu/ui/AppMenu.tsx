@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { Menu, theme } from "antd";
-import { useMenuItems } from "@/shared/UI/AppMenu/hooks/useMenuItems";
+import { useMenuItems } from "@/widgets/AppMenu/hooks/useMenuItems";
 
 const AppMenu = () => {
   const pathname = usePathname();

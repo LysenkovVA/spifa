@@ -14,6 +14,35 @@ const prisma = new PrismaClient();
  * Тестовые данные
  */
 async function main() {
+  console.log("Recreating database...");
+
+  //   await prisma.$queryRaw(
+  //     Prisma.sql`SELECT
+  //   'DROP TABLE IF EXISTS "' || tablename || '" CASCADE;'
+  // from
+  //   pg_tables WHERE schemaname = 'public';`,
+  //   );
+
+  // await prisma.$queryRaw(
+  //   Prisma.sql`
+  //   DROP SCHEMA public CASCADE;`,
+  // );
+
+  // await prisma.$queryRaw(
+  //   Prisma.sql`
+  //   CREATE SCHEMA public;`,
+  // );
+  //
+  // await prisma.$queryRaw(
+  //   Prisma.sql`
+  //   GRANT ALL ON SCHEMA public TO postgres;`,
+  // );
+  //
+  // await prisma.$queryRaw(
+  //   Prisma.sql`
+  //   GRANT ALL ON SCHEMA public TO public;`,
+  // );
+
   console.log("Добавление тестовых данных в БД");
 
   try {

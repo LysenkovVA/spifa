@@ -22,6 +22,7 @@ import { useAppDispatch } from "@/shared/lib/StoreProvider";
 import { useEffect } from "react";
 import { EditCompanyButton } from "@/features/Companies/EditCompanyButton";
 import { PlusOutlined } from "@ant-design/icons";
+import { Spin } from "antd";
 
 const breadcrumbs:
   | Partial<BreadcrumbItemType & BreadcrumbSeparatorType>[]
@@ -65,7 +66,9 @@ const CompaniesPageUI = () => {
           />,
         ]}
       >
-        <CompaniesTable data={companies} />
+        <Spin spinning={isLoading}>
+          <CompaniesTable data={companies} />
+        </Spin>
       </PageWrapper>
     </DynamicModuleLoader>
   );

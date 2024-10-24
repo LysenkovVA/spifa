@@ -1,10 +1,10 @@
 "use client";
-import { AppHeader } from "@/shared/UI/AppHeader";
+import { AppHeader } from "@/widgets/AppHeader";
 import { Content, Footer, Header } from "antd/es/layout/layout";
 import Sider from "antd/es/layout/Sider";
 import { Layout, theme } from "antd";
-import { AppMenu } from "@/shared/UI/AppMenu";
-import { AppFooter } from "@/shared/UI/AppFooter";
+import { AppMenu } from "@/widgets/AppMenu";
+import { AppFooter } from "@/widgets/AppFooter";
 import useScreenWidth from "@/shared/hooks/useScreenWidth/useScreenWidth";
 import { ReactNode } from "react";
 
