@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",
-    "build_dev": "prisma:reset:db && next build",
+    "build_dev": "npm run prisma:reset:db && next build",
     "start": "next start",
     "lint": "next lint",
     "prisma:reset:db": "npx prisma migrate reset --force && npm run prisma:db:dev",
