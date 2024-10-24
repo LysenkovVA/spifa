@@ -5,8 +5,7 @@ export async function findCompanyByNameAction(
   query: string,
 ): Promise<ServerResponse<DaDataCompanyResponse | undefined>> {
   try {
-    const url =
-      "http://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/party";
+    const url = `http${process.env.NODE_ENV === "production" ? "s" : ""}://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/party`;
     // const token = process.env.DADATA_API_KEY;
     const token = "4d169ee39b423f851c1b5d057ce4ffac36a055f6";
     //
@@ -17,6 +16,7 @@ export async function findCompanyByNameAction(
         Accept: "application/json",
         Authorization: "Token " + token,
       },
+
       body: JSON.stringify({ query: query }),
     };
 

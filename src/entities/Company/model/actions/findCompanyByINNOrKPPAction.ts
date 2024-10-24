@@ -5,8 +5,7 @@ export async function findCompanyByINNOrKPPAction(
   query: string,
 ): Promise<ServerResponse<DaDataCompanyResponse | undefined>> {
   try {
-    const url =
-      "http://suggestions.dadata.ru/suggestions/api/4_1/rs/findById/party";
+    const url = `http${process.env.NODE_ENV === "production" ? "s" : ""}://suggestions.dadata.ru/suggestions/api/4_1/rs/findById/party`;
     const token = "4d169ee39b423f851c1b5d057ce4ffac36a055f6";
     //
     const options: RequestInit = {
