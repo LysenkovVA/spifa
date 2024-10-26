@@ -1,11 +1,11 @@
 "use server";
 import { signIn } from "../../../../auth";
+import { User } from "@/entities/User";
 
-export async function loginAction(formData: FormData) {
+export async function loginAction(user: User) {
   try {
-    console.log("LOGIN:", JSON.stringify(formData));
     await signIn("credentials", {
-      ...formData,
+      ...user,
       redirect: false,
     });
   } catch (error) {

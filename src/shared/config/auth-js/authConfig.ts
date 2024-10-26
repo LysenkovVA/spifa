@@ -23,8 +23,8 @@ export const authConfig: NextAuthConfig = {
     Credentials({
       name: "Credentials",
       credentials: {
-        email: {
-          label: "E-mail",
+        login: {
+          label: "Логин",
           type: "text",
         },
         password: {
@@ -33,18 +33,16 @@ export const authConfig: NextAuthConfig = {
         },
       },
       authorize: async (credentials) => {
-        if (!credentials.email || !credentials.password) {
+        if (!credentials.login || !credentials.password) {
           return null;
         }
 
         const candidate = await prisma.user.findFirst({
           where: {
-            email: credentials.email,
+            login: credentials.login,
           },
           include: {
             clients: { include: { client: true } },
-            // dBRole: true,
-            // roles: { include: { userRole: true } },
           },
         });
 
@@ -72,9 +70,11 @@ export const authConfig: NextAuthConfig = {
       try {
         if (user) {
           token.id = user.id!;
-          token.email = user.email!;
+          token.login = user.login!;
           token.surname = user.surname;
           token.name = user.name;
+          token.patronymic = user.patronymic;
+          token.email = user.email;
           token.phone = user.phone;
           token.dbRoles = user.dbRoles;
           token.clients = user.clients;
@@ -90,9 +90,11 @@ export const authConfig: NextAuthConfig = {
       try {
         if (session.user) {
           session.user.id = token.id;
-          session.user.email = token.email!;
+          session.user.login = token.login!;
           session.user.surname = token.surname;
           session.user.name = token.name!;
+          session.user.patronymic = token.patronymic;
+          session.user.email = token.email!;
           session.user.phone = token.phone!;
           session.user.dbRoles = token.dbRoles;
           session.user.clients = token.clients;

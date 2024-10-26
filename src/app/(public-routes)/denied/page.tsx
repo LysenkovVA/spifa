@@ -9,10 +9,10 @@ export default function DeniedPage() {
     <Result
       status="403"
       title="403"
-      subTitle="Доступ запрещен, необходимо авторизоваться"
+      subTitle="Доступ запрещен!"
       extra={
-        <Button onClick={() => router.push("/")} type="primary">
-          Войти
+        <Button onClick={() => router.back()} type="primary">
+          Назад
         </Button>
       }
     />

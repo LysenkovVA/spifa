@@ -17,8 +17,7 @@ import {
   DynamicModuleLoader,
   ReducersList,
 } from "@/shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
-import { useSelector } from "react-redux";
-import { useAppDispatch } from "@/shared/lib/StoreProvider";
+import { useAppDispatch, useAppSelector } from "@/shared/lib/StoreProvider";
 import { useEffect } from "react";
 import { EditCompanyButton } from "@/features/Companies/EditCompanyButton";
 import { PlusOutlined } from "@ant-design/icons";
@@ -43,9 +42,9 @@ const reducers: ReducersList = {
 
 const CompaniesPageUI = () => {
   const dispatch = useAppDispatch();
-  const companies = useSelector(getCompanies.selectAll);
-  const isInitialized = useSelector(getCompaniesIsInitialized);
-  const isLoading = useSelector(getCompaniesIsLoading);
+  const companies = useAppSelector(getCompanies.selectAll);
+  const isInitialized = useAppSelector(getCompaniesIsInitialized);
+  const isLoading = useAppSelector(getCompaniesIsLoading);
 
   useEffect(() => {
     if (!isInitialized && !isLoading) {

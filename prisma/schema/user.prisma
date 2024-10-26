@@ -1,13 +1,15 @@
 // Сущности относящиеся к пользователям
 
 model User {
-  id        String  @id @default(cuid())
-  email     String
-  password  String
-  surname   String?
-  name      String?
-  phone     String?
-  avatarUrl String?
+  id         String  @id @default(cuid())
+  login      String
+  password   String
+  surname    String?
+  name       String?
+  patronymic String?
+  email      String?
+  phone      String?
+  avatarUrl  String?
 
   // Роли на уровне БД
   dbRoles DBRole[] @default([USER])
@@ -18,7 +20,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([email])
+  @@index([login, email])
   @@map("users")
 }
 

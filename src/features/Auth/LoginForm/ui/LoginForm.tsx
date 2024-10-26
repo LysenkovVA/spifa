@@ -14,14 +14,25 @@ import { useRouter } from "next/navigation";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import logo from "@/shared/assets/png/logo.png";
 import { loginAction } from "@/app/api/auth/login.action";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getSession } from "next-auth/react";
 import { DEFAULT_ROUTE } from "@/widgets/AppMenu/hooks/useMenuItems";
+import { fetchUsersCount } from "@/entities/User";
 
 const LoginForm = () => {
   const router = useRouter();
 
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    fetchUsersCount()
+      .then((response) => response.data)
+      .then((usersCount) => {
+        if (usersCount === 0) {
+          router.push("/register");
+        }
+      });
+  }, [router]);
 
   const onFinish = async (values: any) => {
     console.log("Received values of form: ", values);
@@ -30,7 +41,13 @@ const LoginForm = () => {
     const session = await getSession();
 
     if (session?.user) {
-      router.push(DEFAULT_ROUTE);
+      if (session.user.dbRoles?.find((role) => role === "ADMINISTRATOR")) {
+        router.push("/clients");
+      }
+
+      if (session.user.dbRoles?.find((role) => role === "USER")) {
+        router.push(DEFAULT_ROUTE);
+      }
     } else {
       setError("Неверный логин или пароль");
     }
@@ -53,13 +70,13 @@ const LoginForm = () => {
           onFinish={onFinish}
         >
           <Form.Item
-            name="email"
-            rules={[{ required: true, message: "Пожалуйста укажите e-mail" }]}
+            name="login"
+            rules={[{ required: true, message: "Пожалуйста укажите login" }]}
           >
             <Input
               style={{ width: "100%" }}
               prefix={<UserOutlined />}
-              placeholder="E-mail"
+              placeholder="Логин"
             />
           </Form.Item>
           <Form.Item
@@ -102,7 +119,7 @@ const LoginForm = () => {
               align={"center"}
             >
               {"или"}
-              <a href="">зарегистрироваться</a>
+              <a href="/register">зарегистрироваться</a>
             </Flex>
           </Form.Item>
         </Form>

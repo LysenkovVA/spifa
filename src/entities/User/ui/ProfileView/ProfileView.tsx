@@ -1,5 +1,5 @@
 "use client";
-import { Divider, Flex, Space, Typography } from "antd";
+import { Divider, Flex, Space, Tag, Typography } from "antd";
 import { useSession } from "next-auth/react";
 import {
   ContactsOutlined,
@@ -69,6 +69,8 @@ const ProfileView = () => {
           </Space>
         </div>
       ))}
+      <Divider orientation={"left"}>Роли БД</Divider>
+      {session?.user?.dbRoles?.map((role) => <Tag key={role}>{role}</Tag>)}
     </>
   );
 };

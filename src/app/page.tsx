@@ -9,7 +9,13 @@ export default async function LoginPage() {
   // Если пользователь авторизован, перенаправляем в приложение,
   // иначе на авторизацию
   if (session && session.user) {
-    redirect(DEFAULT_ROUTE);
+    if (session.user.dbRoles?.find((role) => role === "ADMINISTRATOR")) {
+      redirect("/clients");
+    }
+
+    if (session.user.dbRoles?.find((role) => role === "USER")) {
+      redirect(DEFAULT_ROUTE);
+    }
   } else {
     return <LoginForm />;
   }

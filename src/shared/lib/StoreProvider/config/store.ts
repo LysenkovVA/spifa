@@ -2,6 +2,7 @@ import { configureStore, Reducer } from "@reduxjs/toolkit";
 import { createReducerManager, TStore } from "./ReducerManager";
 import { StateSchema } from "./StateSchema";
 import { companiesReducer } from "@/features/Companies/CompaniesTable";
+import { clientsReducer } from "@/features/Clients/ClientsTable";
 
 export const makeStore = () => {
   // Чтобы не было ошибки при загрузке приложения, о том что не иницилизирован Store,
@@ -9,6 +10,7 @@ export const makeStore = () => {
   // Также уходит warning по селекторам
   const reducerManager = createReducerManager({
     companies: companiesReducer,
+    clients: clientsReducer,
   });
 
   const store = configureStore({

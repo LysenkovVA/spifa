@@ -23,8 +23,7 @@ import {
   getCompanyDetailsIsLoading,
   updateCompanyService,
 } from "@/entities/Company";
-import { useAppDispatch } from "@/shared/lib/StoreProvider";
-import { useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "@/shared/lib/StoreProvider";
 import {
   DynamicModuleLoader,
   ReducersList,
@@ -58,8 +57,8 @@ const EditCompanyButton = (props: EditCompanyButtonProps) => {
   const [isEdit, setIsEdit] = useState<boolean>(false);
 
   const dispatch = useAppDispatch();
-  const initialValues = useSelector(getCompanyDetails);
-  const isLoading = useSelector(getCompanyDetailsIsLoading);
+  const initialValues = useAppSelector(getCompanyDetails);
+  const isLoading = useAppSelector(getCompanyDetailsIsLoading);
 
   useEffect(() => {
     if (isEdit && companyId) {

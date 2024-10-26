@@ -5,10 +5,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",
-    "build_dev": "npm run prisma:reset:db && next build",
+    "build_dev": "npm run prisma:reset:db:seed && next build",
     "start": "next start",
     "lint": "next lint",
-    "prisma:reset:db": "npx prisma migrate reset --force && npm run prisma:db:dev",
+    "prisma:reset:db": "npx prisma migrate reset --force --skip-seed && npm run prisma:db:push",
+    "prisma:reset:db:seed": "npx prisma migrate reset --force --skip-seed && npm run prisma:db:dev",
     "prisma:client:generate": "npm exec prisma generate",
     "prisma:db:push": "npm exec prisma db push",
     "prisma:db:pull": "npm exec prisma db pull",
