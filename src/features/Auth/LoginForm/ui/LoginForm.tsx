@@ -59,7 +59,7 @@ const LoginForm = () => {
       align={"center"}
       justify={"center"}
       gap={16}
-      style={{ marginLeft: "20%", marginRight: "20%", marginTop: "10%" }}
+      // style={{ marginLeft: "20%", marginRight: "20%", marginTop: "10%" }}
     >
       <Image src={logo.src} alt={"logo"} preview={false} width={250} />
       <Card>

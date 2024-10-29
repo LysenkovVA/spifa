@@ -23,12 +23,13 @@ import {
   getCompanyDetailsIsLoading,
   updateCompanyService,
 } from "@/entities/Company";
-import { useAppDispatch, useAppSelector } from "@/shared/lib/StoreProvider";
+import { useAppDispatch } from "@/shared/lib/StoreProvider";
 import {
   DynamicModuleLoader,
   ReducersList,
 } from "@/shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
 import useScreenWidth from "@/shared/hooks/useScreenWidth/useScreenWidth";
+import { useSelector } from "react-redux";
 
 const reducers: ReducersList = {
   companyDetails: companyDetailsReducer,
@@ -48,7 +49,6 @@ export interface EditCompanyButtonProps extends ButtonProps {
 const EditCompanyButton = (props: EditCompanyButtonProps) => {
   const { title = "Кнопка", icon, companyId, ...restProps } = props;
 
-  // const { notification } = App.useApp();
   const [notificationApi, contextHolder] = notification.useNotification();
 
   const [form] = Form.useForm();
@@ -57,8 +57,8 @@ const EditCompanyButton = (props: EditCompanyButtonProps) => {
   const [isEdit, setIsEdit] = useState<boolean>(false);
 
   const dispatch = useAppDispatch();
-  const initialValues = useAppSelector(getCompanyDetails);
-  const isLoading = useAppSelector(getCompanyDetailsIsLoading);
+  const initialValues = useSelector(getCompanyDetails);
+  const isLoading = useSelector(getCompanyDetailsIsLoading);
 
   useEffect(() => {
     if (isEdit && companyId) {

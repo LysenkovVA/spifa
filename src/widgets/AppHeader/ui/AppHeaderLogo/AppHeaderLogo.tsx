@@ -17,7 +17,7 @@ const AppHeaderLogo = () => {
         <Image
           style={{
             position: "relative",
-            width: screenWidth.xs || screenWidth.sm ? 100 : 150,
+            width: 150,
           }}
           src={logo.src}
           alt={"logo"}

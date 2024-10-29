@@ -17,11 +17,12 @@ import {
   DynamicModuleLoader,
   ReducersList,
 } from "@/shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
-import { useAppDispatch, useAppSelector } from "@/shared/lib/StoreProvider";
+import { useAppDispatch } from "@/shared/lib/StoreProvider";
 import { useEffect } from "react";
 import { EditCompanyButton } from "@/features/Companies/EditCompanyButton";
 import { PlusOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
+import { useSelector } from "react-redux";
 
 const breadcrumbs:
   | Partial<BreadcrumbItemType & BreadcrumbSeparatorType>[]
@@ -42,9 +43,9 @@ const reducers: ReducersList = {
 
 const CompaniesPageUI = () => {
   const dispatch = useAppDispatch();
-  const companies = useAppSelector(getCompanies.selectAll);
-  const isInitialized = useAppSelector(getCompaniesIsInitialized);
-  const isLoading = useAppSelector(getCompaniesIsLoading);
+  const companies = useSelector(getCompanies.selectAll);
+  const isInitialized = useSelector(getCompaniesIsInitialized);
+  const isLoading = useSelector(getCompaniesIsLoading);
 
   useEffect(() => {
     if (!isInitialized && !isLoading) {

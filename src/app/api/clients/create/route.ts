@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "../../../../../prisma/db";
-import { Prisma } from "@prisma/client";
+import { DBRole, Prisma } from "@prisma/client";
 import { ServerResponse } from "@/shared/lib/responses/ServerResponse";
 import { Client, ClientZSchema } from "@/entities/Client";
+import { UserZSchema } from "@/entities/User";
+import bcrypt from "bcryptjs";
 
 /**
  * Создание нового документа
@@ -24,9 +26,33 @@ export async function POST(request: NextRequest) {
       address: validateClient.address,
     };
 
+    const newClientsOnUsers:
+      | Prisma.ClientsOnUsersCreateWithoutClientInput[]
+      | undefined = data.users?.map((clientOnUser) => {
+      const validatedUser = UserZSchema.parse(clientOnUser.user);
+
+      // TODO: Валидация существования пользователя в БД
+
+      const data: Prisma.ClientsOnUsersCreateWithoutClientInput = {
+        user: {
+          create: {
+            login: validatedUser.login,
+            password: bcrypt.hashSync(validatedUser.password, 10),
+            dbRoles: [DBRole.USER],
+          },
+        },
+        clientUserRole: clientOnUser.clientUserRole!,
+      };
+
+      return data;
+    });
+
+    createQuery.users = { create: newClientsOnUsers };
+
     // Создание новой записи в БД
     const newClient = await prisma.client.create({
       data: createQuery,
+      include: { users: { include: { user: true } } },
     });
 
     // Возвращаем созданный документ

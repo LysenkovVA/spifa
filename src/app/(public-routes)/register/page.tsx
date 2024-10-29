@@ -1,10 +1,10 @@
 import { RegistrationForm } from "@/features/Auth/RegistrationForm";
-import { PublicPageWrapper } from "@/shared/UI/PublicPageWrapper";
+import { ContentWrapper } from "../../../shared/UI/ContentWrapper";
 
 export default async function RegisterPage() {
   return (
-    <PublicPageWrapper>
+    <ContentWrapper>
       <RegistrationForm style={{ width: "300px" }} />
-    </PublicPageWrapper>
+    </ContentWrapper>
   );
 }

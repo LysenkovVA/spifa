@@ -8,8 +8,13 @@ import { createClientService } from "./model/services/createClientService";
 import { deleteClientService } from "./model/services/deleteClientService";
 import { fetchClientByIdService } from "./model/services/fetchClientByIdService";
 import { updateClientService } from "./model/services/updateClientService";
+import { ClientDetailsSchema } from "./model/types/ClientDetailsSchema";
+import {
+  clientDetailsActions,
+  clientDetailsReducer,
+} from "./model/slice/clientSlice";
 
-export type { Client };
+export type { Client, ClientDetailsSchema };
 export {
   ClientZSchema,
   createClient,
@@ -20,4 +25,7 @@ export {
   deleteClientService,
   fetchClientByIdService,
   updateClientService,
+  clientDetailsActions,
+  clientDetailsReducer,
 };
+export * from "./model/selectors/client.selectors";

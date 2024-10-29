@@ -1,6 +1,6 @@
 import { StateSchema } from "@/shared/lib/StoreProvider/config/StateSchema";
 import { clientsAdapter } from "../adapter/clientsAdapter";
-import { createAppSelector } from "@/shared/lib/StoreProvider";
+import { createSelector } from "@reduxjs/toolkit";
 
 const getClientsSchema = (state: StateSchema) => {
   return state.clients;
@@ -10,40 +10,37 @@ export const getClients = clientsAdapter.getSelectors<StateSchema>(
   (state) => state.clients ?? clientsAdapter.getInitialState(),
 );
 
-export const getClientsIsLoading = createAppSelector(
+export const getClientsIsLoading = createSelector(
   getClientsSchema,
   (schema) => {
     return schema?.isLoading ?? false;
   },
 );
 
-export const getClientsError = createAppSelector(getClientsSchema, (schema) => {
+export const getClientsError = createSelector(getClientsSchema, (schema) => {
   return schema?.error ?? "";
 });
 
-export const getClientsIsInitialized = createAppSelector(
+export const getClientsIsInitialized = createSelector(
   getClientsSchema,
   (schema) => {
     return schema?._isInitialized ?? false;
   },
 );
 
-export const getClientsTake = createAppSelector(getClientsSchema, (schema) => {
+export const getClientsTake = createSelector(getClientsSchema, (schema) => {
   return schema?.take ?? 5;
 });
 
-export const getClientsSkip = createAppSelector(getClientsSchema, (schema) => {
+export const getClientsSkip = createSelector(getClientsSchema, (schema) => {
   return schema?.skip ?? 0;
 });
 
-export const getClientsSearch = createAppSelector(
-  getClientsSchema,
-  (schema) => {
-    return schema?.search ?? "";
-  },
-);
+export const getClientsSearch = createSelector(getClientsSchema, (schema) => {
+  return schema?.search ?? "";
+});
 
-export const getClientsTotalCount = createAppSelector(
+export const getClientsTotalCount = createSelector(
   getClientsSchema,
   (schema) => {
     return schema?.totalCount ?? 0;

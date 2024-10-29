@@ -2,30 +2,41 @@
 import { AppHeader } from "@/widgets/AppHeader";
 import { Content, Footer, Header } from "antd/es/layout/layout";
 import Sider from "antd/es/layout/Sider";
-import { Layout, theme } from "antd";
-import { AppMenu } from "@/widgets/AppMenu";
+import { Flex, Layout, theme } from "antd";
 import { AppFooter } from "@/widgets/AppFooter";
 import useScreenWidth from "@/shared/hooks/useScreenWidth/useScreenWidth";
-import { ReactNode } from "react";
+import { CSSProperties, ReactNode } from "react";
+import { ContentWrapper } from "@/shared/UI/ContentWrapper";
+import { AppMenu } from "@/widgets/AppMenu";
+
+const AVATAR_SIZE = 50;
 
 /**
  * Layout для страниц авторизованного пользователя
  * @param children
  * @constructor
  */
-export default function UserLayout({
-  children, // will be a page or nested layout
-}: {
-  children: ReactNode;
-}) {
+export default function UserLayout({ children }: { children: ReactNode }) {
   const { token } = theme.useToken();
   const screenWidth = useScreenWidth();
 
+  const appMenuStyle: CSSProperties = {
+    background: "whitesmoke",
+    borderRadius: "12px 0px 0px 12px",
+    borderColor: token.colorBorder,
+    paddingTop: 0,
+    marginTop: 0,
+    // flex: 1,
+    position: "absolute",
+    width: "calc(100%)",
+    height: `calc(100vh - 2 * ${token.Layout?.headerHeight}px)`,
+  };
+
   return (
-    <Layout>
+    <Layout style={{ background: "#3E5B87" }}>
       <Header
         style={{
-          height: screenWidth.xs || screenWidth.sm ? 50 : 70,
+          height: 70,
           lineHeight: 1,
           alignContent: "center",
         }}
@@ -37,37 +48,43 @@ export default function UserLayout({
           height: `calc(100vh - 2 * ${token.Layout?.headerHeight}px)`,
         }}
       >
-        <Layout>
+        <Layout style={{ borderRadius: "0px 12px 12px 0px" }}>
           <Sider
             style={{
-              borderColor: token.colorBorder,
-              borderRadius: token.borderRadius,
-              borderWidth: 1,
-              height: `calc(100vh - 2 * ${token.Layout?.headerHeight}px - 16px)`,
-              margin: "8px 0px 8px 8px",
-              width: screenWidth.xs || screenWidth.sm ? 50 : 200,
+              height: `calc(100vh - 2 * ${token.Layout?.headerHeight}px)`,
             }}
-            width={200}
-            collapsed={screenWidth.xs || screenWidth.sm}
-            collapsedWidth={50}
+            width={160}
           >
-            <AppMenu />
+            <Flex>
+              {/*<AppHeaderAvatar*/}
+              {/*  style={{*/}
+              {/*    width: "100%",*/}
+              {/*    position: "relative",*/}
+              {/*    zIndex: 1,*/}
+              {/*    top: 5,*/}
+              {/*  }}*/}
+              {/*  avatarSize={AVATAR_SIZE}*/}
+              {/*/>*/}
+              <AppMenu style={appMenuStyle} />
+            </Flex>
           </Sider>
-          <main
+          <ContentWrapper
             style={{
-              margin: "8px 16px 8px 16px",
-              width: "100%",
+              height: `calc(100vh - 2 * ${token.Layout?.headerHeight}px - 16px)`,
+              margin: 8,
             }}
+            align={"top"}
+            justify={"start"}
           >
             {children}
-          </main>
+          </ContentWrapper>
         </Layout>
       </Content>
       <Footer
         style={{
           textAlign: "center",
           color: "whitesmoke",
-          height: screenWidth.xs || screenWidth.sm ? 50 : 70,
+          height: 70,
           alignContent: "center",
         }}
       >

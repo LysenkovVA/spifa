@@ -18,6 +18,7 @@ export async function GET(
     // Выборка из БД
     const data = await prisma.client.findFirst({
       where: { id: params.id },
+      include: { users: { include: { user: true } } },
     });
 
     if (data) {

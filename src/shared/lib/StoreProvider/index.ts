@@ -1,15 +1,10 @@
 import { StoreProvider } from "./ui/StoreProvider";
-import {
-  createAppSelector,
-  useAppDispatch,
-  useAppSelector,
-  useAppStore,
-} from "./hooks/hooks";
+import { useAppDispatch, useAppStore } from "./hooks/hooks";
 
 export {
   StoreProvider,
-  useAppSelector,
+  // useAppSelector,
   useAppDispatch,
   useAppStore,
-  createAppSelector,
+  // createAppSelector,
 };

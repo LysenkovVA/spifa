@@ -6,7 +6,12 @@ import useScreenWidth from "@/shared/hooks/useScreenWidth/useScreenWidth";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-const AppHeaderAvatar = () => {
+export interface AppHeaderAvatarProps {
+  style?: React.CSSProperties;
+  avatarSize?: number;
+}
+
+const AppHeaderAvatar = (props: AppHeaderAvatarProps) => {
   const screenWidth = useScreenWidth();
   const { data: session } = useSession();
   const router = useRouter();
@@ -16,28 +21,24 @@ const AppHeaderAvatar = () => {
       align={"center"}
       justify={"center"}
       gap={4}
-      style={{ cursor: "pointer" }}
+      vertical
+      style={{ ...props.style, cursor: "pointer" }}
       onClick={() => router.push("/profile")}
     >
-      {(screenWidth.lg || screenWidth.xl) && (
-        <Typography.Text
-          type={"secondary"}
-          style={{ color: "#FFD7C4", fontSize: 14 }}
-        >
-          {session?.user?.email}
-        </Typography.Text>
-      )}
-      {(screenWidth.sm ||
-        screenWidth.md ||
-        screenWidth.lg ||
-        screenWidth.xl) && (
-        <Avatar
-          size={"large"}
-          shape={"circle"}
-          style={{ borderColor: "gray", borderWidth: 2, fontWeight: "bold" }}
-          icon={<UserOutlined />}
-        />
-      )}
+      <Avatar
+        size={props.avatarSize ?? 40}
+        shape={"circle"}
+        style={{
+          borderColor: "darkgrey",
+          borderWidth: 2,
+          fontWeight: "bold",
+          background: "ghostwhite",
+        }}
+        icon={<UserOutlined style={{ color: "darkgrey" }} />}
+      />
+      <Typography.Text style={{ color: "gray", fontSize: 14 }}>
+        {session?.user?.login}
+      </Typography.Text>
     </Flex>
   );
 };

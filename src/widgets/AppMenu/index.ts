@@ -1,3 +1,3 @@
-import AppMenu from "./ui/AppMenu";
+import { AppMenu } from "./ui/AppMenu";
 
 export { AppMenu };

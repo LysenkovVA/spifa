@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 import { primaryTheme } from "@/shared/config/themes/primaryTheme";
 import { StoreProvider } from "@/shared/lib/StoreProvider";
 import { SessionProvider } from "next-auth/react";
+import { ContentWrapper } from "../shared/UI/ContentWrapper";
 
 // для локализации календаря
 dayjs.locale("ru");
@@ -16,11 +17,13 @@ const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
   weight: "100 900",
+  preload: false,
 });
 const geistMono = localFont({
   src: "./fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
   weight: "100 900",
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -40,7 +43,9 @@ export default function RootLayout({
           <StoreProvider>
             {/*Ant Design config provider*/}
             <ConfigProvider locale={ru_RU} theme={primaryTheme}>
-              <AntdRegistry>{children}</AntdRegistry>
+              <AntdRegistry>
+                <ContentWrapper height={"100vh"}>{children}</ContentWrapper>
+              </AntdRegistry>
             </ConfigProvider>
           </StoreProvider>
         </SessionProvider>

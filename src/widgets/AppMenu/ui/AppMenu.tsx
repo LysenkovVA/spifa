@@ -1,46 +1,60 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, theme } from "antd";
+import { Menu, MenuProps } from "antd";
+import { CSSProperties, memo } from "react";
 import { useMenuItems } from "@/widgets/AppMenu/hooks/useMenuItems";
 
-const AppMenu = () => {
+export interface AppMenuProps {
+  style?: CSSProperties;
+}
+
+type MenuItem = Required<MenuProps>["items"][number];
+
+export const AppMenu = memo((props: AppMenuProps) => {
+  const { style } = props;
   const pathname = usePathname();
   const router = useRouter();
-  const { token } = theme.useToken();
 
-  const [menuItems, menuArray] = useMenuItems();
+  const [menuItems] = useMenuItems();
 
   return (
     <Menu
+      style={style}
       mode="inline"
       defaultSelectedKeys={[
-        menuArray.find((item) => item.target === pathname)?.key?.toString() ||
-          String(1),
+        menuItems
+          .find((item) => item.targetUrl === pathname)
+          ?.key?.toString() || String(0),
       ]}
       selectedKeys={[
-        menuArray.find((item) => item.target === pathname)?.key?.toString() ||
-          String(1),
+        menuItems
+          .find((item) => item.targetUrl === pathname)
+          ?.key?.toString() || String(0),
       ]}
-      items={menuItems}
-      style={{
-        background: "whitesmoke",
-        flex: 1,
-        borderRadius: token.borderRadius,
-        borderColor: token.colorBorder,
-        margin: "1px 0px 1px 1px",
-        width: "calc(100% - 2px)",
-        height: `calc(100vh - 2 * ${token.Layout?.headerHeight}px - 18px)`,
-      }}
+      items={menuItems.map((item) => {
+        const menuItem: MenuItem = {
+          key: String(item.key),
+          label: item.label,
+          icon: item.icon,
+          children: item.children?.map((child) => {
+            return {
+              key: String(item.key),
+              label: child.label,
+              icon: child.icon,
+            };
+          }),
+        };
+
+        return menuItem;
+      })}
       onClick={(menuInfo) => {
-        const { target } =
-          menuArray.find((item) => item.key === menuInfo.key) || {};
-        if (target) {
-          router.push(target);
+        const { targetUrl } =
+          menuItems.find((item) => item.key === menuInfo.key) ?? {};
+        if (targetUrl) {
+          router.push(targetUrl);
         }
       }}
     />
   );
-};
-
-export default AppMenu;
+});

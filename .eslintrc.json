@@ -8,10 +8,10 @@
       {
         "name": "react-redux",
         "importNames": [
-          "useSelector",
+//          "useSelector",
           "useDispatch"
         ],
-        "message": "Используйте типизированные хуки `useAppDispatch` и `useAppSelector`!"
+        "message": "Используйте типизированный хук `useAppDispatch`!"
       }
     ],
     "@typescript-eslint/no-empty-object-type": "off",
