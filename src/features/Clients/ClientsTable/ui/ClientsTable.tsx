@@ -92,10 +92,16 @@ const ClientsTable = (props: ClientsTableProps) => {
   );
 
   const onFinish = useCallback(
-    async (values: Client) => {
+    async (values: Client, usersToDeleteIds: Array<string>) => {
+      // notificationApi.info({
+      //   message: `Could be deleted: ${JSON.stringify(usersToDeleteIds)}`,
+      // });
+
       if (initialValues?.id) {
         const request = await dispatch(
-          updateClientService({ client: { ...values, id: initialValues?.id } }),
+          updateClientService({
+            client: { ...values, id: initialValues?.id, usersToDeleteIds },
+          }),
         ).unwrap();
         if (request.isOk) {
           setIsEdit(false);

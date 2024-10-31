@@ -9,6 +9,7 @@ import bcrypt from "bcryptjs";
 /**
  * Создание нового документа
  * @param request
+ * @deprecated
  * @constructor
  */
 export async function POST(request: NextRequest) {

@@ -7,5 +7,6 @@ export interface Client {
   address?: string;
   phone?: string;
   users?: Array<ClientsOnUsers>;
+  usersToDeleteIds?: Array<string>;
   companies?: Array<Company>;
 }

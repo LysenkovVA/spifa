@@ -35,11 +35,12 @@ export const AppMenu = memo((props: AppMenuProps) => {
       items={menuItems.map((item) => {
         const menuItem: MenuItem = {
           key: String(item.key),
+          type: "group",
           label: item.label,
-          icon: item.icon,
+          // icon: item.icon,
           children: item.children?.map((child) => {
             return {
-              key: String(item.key),
+              key: String(child.key),
               label: child.label,
               icon: child.icon,
             };

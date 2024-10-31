@@ -2,11 +2,16 @@
  * https://www.prisma.io/docs/orm/more/help-and-troubleshooting/help-articles/nextjs-prisma-client-dev-practices
  */
 
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 
 const prismaClientSingleton = () => {
   return new PrismaClient({
     log: ["query", "info", "warn", "error"],
+    transactionOptions: {
+      isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+      maxWait: 5000, // default: 2000
+      timeout: 10000, // default: 5000
+    },
   });
 };
 

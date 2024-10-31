@@ -8,6 +8,9 @@ export interface CreateClientProps {
   client: Client;
 }
 
+/**
+ * @deprecated
+ */
 export const createClientService = createAsyncThunk<
   ServerResponse<Client>,
   CreateClientProps,

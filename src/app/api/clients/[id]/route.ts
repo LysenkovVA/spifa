@@ -44,6 +44,12 @@ export async function GET(
   }
 }
 
+/**
+ * @deprecated
+ * @param request
+ * @param params
+ * @constructor
+ */
 export async function PATCH(
   request: NextRequest,
   { params }: { params: { id: string } },
@@ -69,6 +75,10 @@ export async function PATCH(
         name: validateClient.name!,
         phone: validateClient.phone,
         address: validateClient.address,
+        // users: {
+        //   create: {user: }
+        //   delete: {user: data.usersToDeleteIds?.map((id) => { return {id} as Prisma.UserWhereUniqueInput})}
+        // }
       },
       where: { id: params.id },
     };

@@ -1,9 +1,5 @@
 import { Space } from "antd";
-import {
-  BankOutlined,
-  OrderedListOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import { BankOutlined, UserOutlined } from "@ant-design/icons";
 import { useDBUser } from "@/shared/hooks/useUserRole/useDBUser";
 
 export const DEFAULT_ROUTE = "/companies";
@@ -27,7 +23,8 @@ export const useMenuItems = () => {
       key: "1",
       label: (
         <Space size={"small"}>
-          <OrderedListOutlined /> {"Списки"}
+          {/*<OrderedListOutlined /> */}
+          {"СПИСКИ"}
         </Space>
       ),
       type: "group",
