@@ -1,10 +1,7 @@
 import z from "zod";
 
 export const UserZSchema = z.object({
-  id: z
-    .string({ invalid_type_error: 'Поле "Идентификатор" не является строкой' })
-    .cuid({ message: 'Поле "Идентификатор" не соответствует cuid' })
-    .optional(),
+  id: z.string().optional(),
   login: z.string({
     required_error: 'Поле "Логин" не указано',
     invalid_type_error: 'Поле "Логин" не является строкой',

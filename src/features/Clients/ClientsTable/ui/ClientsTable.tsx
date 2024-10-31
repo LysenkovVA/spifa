@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { CSSProperties, useCallback, useState } from "react";
 import {
   Button,
   Drawer,
@@ -10,17 +10,17 @@ import {
   Space,
   Spin,
   TableProps,
+  Tag,
   Typography,
 } from "antd";
 import {
   Client,
   clientDetailsReducer,
-  createClientService,
   deleteClientService,
   fetchClientByIdService,
   getClientDetails,
   getClientDetailsIsLoading,
-  updateClientService,
+  upsertClientService,
 } from "@/entities/Client";
 import { AppTable } from "@/shared/UI/AppTable";
 import { useAppDispatch } from "@/shared/lib/StoreProvider";
@@ -51,6 +51,21 @@ const columns: TableProps<Client>["columns"] = [
     key: "phone",
     render: (text, fields) => <Typography.Text>{text}</Typography.Text>,
   },
+  {
+    title: "Пользователи",
+    dataIndex: "usersCount",
+    key: "usersCount",
+    render: (text, fields) => (
+      <Flex vertical gap={4}>
+        <Tag
+          color={"orange"}
+        >{`Администраторов: ${fields.users?.filter((user) => user.clientUserRole === "ADMINISTRATOR").length ?? 0}`}</Tag>
+        <Tag
+          color={"green"}
+        >{`Сотрудников: ${fields.users?.filter((user) => user.clientUserRole === "EMPLOYEE").length ?? 0}`}</Tag>
+      </Flex>
+    ),
+  },
 ];
 
 const reducers: ReducersList = {
@@ -59,6 +74,7 @@ const reducers: ReducersList = {
 
 export interface ClientsTableProps {
   clients?: Client[];
+  style?: CSSProperties;
 }
 
 const ClientsTable = (props: ClientsTableProps) => {
@@ -93,52 +109,40 @@ const ClientsTable = (props: ClientsTableProps) => {
 
   const onFinish = useCallback(
     async (values: Client, usersToDeleteIds: Array<string>) => {
-      // notificationApi.info({
-      //   message: `Could be deleted: ${JSON.stringify(usersToDeleteIds)}`,
-      // });
-
-      if (initialValues?.id) {
-        const request = await dispatch(
-          updateClientService({
-            client: { ...values, id: initialValues?.id, usersToDeleteIds },
+      try {
+        const response = await dispatch(
+          upsertClientService({
+            client: {
+              ...values,
+              id: initialValues?.id ?? "",
+              usersToDeleteIds,
+            },
           }),
         ).unwrap();
-        if (request.isOk) {
+
+        if (response.isOk) {
           setIsEdit(false);
           notificationApi.success({
-            message: `Данные клиента "${request.data.name}" обновлены!`,
+            message: `Данные сохранены!`,
             closable: false,
             placement: "top",
             duration: 3,
           });
         } else {
           notificationApi.error({
-            message: request.errorMessages,
+            message: JSON.stringify(response.errorMessages),
             closable: false,
             placement: "top",
             duration: 5,
           });
         }
-      } else {
-        const request = await dispatch(
-          createClientService({ client: values }),
-        ).unwrap();
-        if (request.isOk) {
-          setIsEdit(false);
-          notificationApi.success({
-            message: `Клиент "${request.data.name}" создан!`,
-            closable: false,
-            placement: "top",
-            duration: 3,
-          });
-        } else {
-          notificationApi.error({
-            message: request.errorMessages,
-            closable: false,
-            placement: "top",
-            duration: 5,
-          });
-        }
+      } catch (error) {
+        notificationApi.error({
+          message: JSON.stringify(error),
+          closable: false,
+          placement: "top",
+          duration: 5,
+        });
       }
     },
     [dispatch, initialValues?.id, notificationApi],
@@ -173,6 +177,7 @@ const ClientsTable = (props: ClientsTableProps) => {
     <>
       {contextHolder}
       <AppTable<Client>
+        style={{ height: "calc(100vh - 140px - 16px)" }}
         data={props.clients}
         columns={columns}
         onAddClick={onAddClick}

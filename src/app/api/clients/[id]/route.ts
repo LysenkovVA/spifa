@@ -1,8 +1,7 @@
 import prisma from "../../../../../prisma/db";
 import { NextRequest, NextResponse } from "next/server";
 import { ServerResponse } from "@/shared/lib/responses/ServerResponse";
-import { Prisma } from "@prisma/client";
-import { Client, ClientZSchema } from "@/entities/Client";
+import { Client } from "@/entities/Client";
 
 /**
  * Получение клиента по id
@@ -39,63 +38,6 @@ export async function GET(
         error,
         undefined,
         `Неизвестная ошибка при получении клиента с id=${params.id}`,
-      ),
-    );
-  }
-}
-
-/**
- * @deprecated
- * @param request
- * @param params
- * @constructor
- */
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: { id: string } },
-) {
-  try {
-    // Получаем тело из запроса
-    const data: Client = await request.json();
-
-    if (!params.id) {
-      return NextResponse.json(
-        ServerResponse.ServerError(
-          "id клиента для обновления не задан",
-          undefined,
-        ),
-      );
-    }
-
-    // Валидация данных документа
-    const validateClient = ClientZSchema.parse(data);
-
-    const updateClientQuery: Prisma.ClientUpdateArgs = {
-      data: {
-        name: validateClient.name!,
-        phone: validateClient.phone,
-        address: validateClient.address,
-        // users: {
-        //   create: {user: }
-        //   delete: {user: data.usersToDeleteIds?.map((id) => { return {id} as Prisma.UserWhereUniqueInput})}
-        // }
-      },
-      where: { id: params.id },
-    };
-
-    // Обновление записи в БД
-    const updatedClient = await prisma.client.update(updateClientQuery);
-
-    // Возвращаем обновленный документ
-    return NextResponse.json(
-      ServerResponse.Ok<Client>(updatedClient as Client),
-    );
-  } catch (error) {
-    return NextResponse.json(
-      ServerResponse.ServerError(
-        error,
-        undefined,
-        `Неизвестная ошибка при обновлении клиента с id=${params.id}`,
       ),
     );
   }

@@ -21,7 +21,11 @@ const reducers: ReducersList = {
   clients: clientsReducer,
 };
 
-const ClientsPageUI = () => {
+export interface ClientsPageUIProps {
+  style?: React.CSSProperties;
+}
+
+const ClientsPageUI = (props: ClientsPageUIProps) => {
   const dispatch = useAppDispatch();
   const clients = useSelector(getClients.selectAll);
   const isInitialized = useSelector(getClientsIsInitialized);
@@ -35,9 +39,11 @@ const ClientsPageUI = () => {
 
   return (
     <DynamicModuleLoader reducers={reducers} removeAfterUnmount={false}>
-      <Spin spinning={isLoading}>
-        <ClientsTable clients={clients} />
-      </Spin>
+      <div style={props.style}>
+        <Spin spinning={isLoading}>
+          <ClientsTable clients={clients} />
+        </Spin>
+      </div>
     </DynamicModuleLoader>
   );
 };

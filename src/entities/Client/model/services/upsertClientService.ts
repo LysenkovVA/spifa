@@ -2,24 +2,21 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { ServerResponse } from "@/shared/lib/responses/ServerResponse";
 import { Client } from "../types/Client";
 import { ThunkConfig } from "@/shared/lib/StoreProvider/config/store";
-import { createClient } from "../actions/createClient";
+import { upsertClient } from "../actions/upsertClient";
 
-export interface CreateClientProps {
+export interface UpdateClientProps {
   client: Client;
 }
 
-/**
- * @deprecated
- */
-export const createClientService = createAsyncThunk<
+export const upsertClientService = createAsyncThunk<
   ServerResponse<Client>,
-  CreateClientProps,
+  UpdateClientProps,
   ThunkConfig<string>
->("createClientService", async (props, thunkApi) => {
+>("updateClientService", async (props, thunkApi) => {
   const { rejectWithValue } = thunkApi;
 
   try {
-    const response = await createClient(props.client);
+    const response = await upsertClient(props.client);
 
     if (!response.isOk) {
       return rejectWithValue(
@@ -32,7 +29,7 @@ export const createClientService = createAsyncThunk<
     return response;
   } catch (e) {
     return rejectWithValue(
-      `Произошла неизвестная ошибка при создании клиента: ${JSON.stringify(e)}`,
+      `Произошла неизвестная ошибка при обновлении клиента с id=${props.client.id}: ${JSON.stringify(e)}`,
     );
   }
 });

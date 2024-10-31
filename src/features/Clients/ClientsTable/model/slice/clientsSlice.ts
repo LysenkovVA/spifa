@@ -1,11 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ClientsSchema } from "../types/ClientsSchema";
 import { fetchClientsService } from "@/features/Clients/ClientsTable";
-import {
-  createClientService,
-  deleteClientService,
-  updateClientService,
-} from "@/entities/Client";
+import { deleteClientService, upsertClientService } from "@/entities/Client";
 import { clientsAdapter } from "../adapter/clientsAdapter";
 
 const initialState: ClientsSchema = {
@@ -74,18 +70,11 @@ export const clientsSlice = createSlice({
           clientsAdapter.removeAll(state);
         }
       })
-      // Добавление компании
-      .addCase(createClientService.fulfilled, (state, action) => {
-        clientsAdapter.upsertOne(state, action.payload.data);
-        if (state.totalCount) {
-          state.totalCount = state.ids.length;
-        } else {
-          state.totalCount = 1;
-        }
-      })
-      .addCase(createClientService.rejected, (state, action) => {})
       // Обновление данных компании
-      .addCase(updateClientService.fulfilled, (state, action) => {
+      .addCase(upsertClientService.pending, (state, action) => {
+        state.error = undefined;
+      })
+      .addCase(upsertClientService.fulfilled, (state, action) => {
         clientsAdapter.upsertOne(state, action.payload.data);
         if (state.totalCount) {
           state.totalCount = state.ids.length;
@@ -93,8 +82,13 @@ export const clientsSlice = createSlice({
           state.totalCount = 1;
         }
       })
-      .addCase(updateClientService.rejected, (state, action) => {})
+      .addCase(upsertClientService.rejected, (state, action) => {
+        state.error = action.payload;
+      })
       // Удаление компании
+      .addCase(deleteClientService.pending, (state, action) => {
+        state.error = undefined;
+      })
       .addCase(deleteClientService.fulfilled, (state, action) => {
         clientsAdapter.removeOne(state, action.payload.data.id);
         if (state.totalCount) {
@@ -102,6 +96,9 @@ export const clientsSlice = createSlice({
         } else {
           state.totalCount = 0;
         }
+      })
+      .addCase(deleteClientService.rejected, (state, action) => {
+        state.error = action.payload;
       });
   },
 });

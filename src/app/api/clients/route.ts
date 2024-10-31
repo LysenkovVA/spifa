@@ -7,7 +7,9 @@ export async function GET(request: NextRequest, response: Response) {
   try {
     // Результат
     const [clients, count] = await prisma.$transaction([
-      prisma.client.findMany(),
+      prisma.client.findMany({
+        include: { users: { include: { user: true } } },
+      }),
       prisma.client.count(),
     ]);
 
