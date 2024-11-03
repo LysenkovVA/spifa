@@ -13,6 +13,7 @@ const initialState: ClientsSchema = {
   skip: 0,
   search: "",
   totalCount: 0,
+  hasMore: true,
   _isInitialized: false,
 };
 
@@ -27,6 +28,7 @@ export const clientsSlice = createSlice({
     setSearchQuery: (state, action: PayloadAction<string>) => {
       state.search = action.payload;
       state.skip = 0;
+      state.hasMore = true;
       state._isInitialized = false;
     },
   },
@@ -36,6 +38,7 @@ export const clientsSlice = createSlice({
         state.isLoading = true;
         state.error = undefined;
         state.totalCount = 0;
+        state.hasMore = true;
 
         // Если данные заменяются
         if (action.meta.arg.replaceData) {
@@ -56,12 +59,14 @@ export const clientsSlice = createSlice({
           clientsAdapter.addMany(state, action.payload.data);
         }
 
-        state.totalCount = action.payload.pagination?.total;
+        state.totalCount = action.payload.pagination?.total ?? 0;
+        state.hasMore = state.totalCount > state.skip + state.take;
         state._isInitialized = true;
       })
       .addCase(fetchClientsService.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
+        state.hasMore = true;
         state.totalCount = 0;
 
         // Если данные заменяются
@@ -70,7 +75,7 @@ export const clientsSlice = createSlice({
           clientsAdapter.removeAll(state);
         }
       })
-      // Обновление данных компании
+      // Обновление данных клиента
       .addCase(upsertClientService.pending, (state, action) => {
         state.error = undefined;
       })
@@ -85,7 +90,7 @@ export const clientsSlice = createSlice({
       .addCase(upsertClientService.rejected, (state, action) => {
         state.error = action.payload;
       })
-      // Удаление компании
+      // Удаление клиента
       .addCase(deleteClientService.pending, (state, action) => {
         state.error = undefined;
       })

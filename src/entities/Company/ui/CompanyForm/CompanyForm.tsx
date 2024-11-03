@@ -13,10 +13,10 @@ import {
   Select,
   Tabs,
   TabsProps,
+  Tag,
 } from "antd";
 import { Company } from "@/entities/Company";
 import { useCallback, useEffect, useState } from "react";
-import { ValidateErrorEntity } from "rc-field-form/es/interface";
 import { BankOutlined, SmileOutlined, UserOutlined } from "@ant-design/icons";
 import { DigitInput } from "@/shared/UI/DigitInput";
 import dayjs from "dayjs";
@@ -31,19 +31,28 @@ import { Suggestion } from "../../model/types/DaDataCompanyInterfaces";
 import SearchableInnOrKppDigitInput from "@/features/Companies/SearchableINNDigitInput/ui/SearchableInnOrKppDigitInput";
 import useModal from "antd/es/modal/useModal";
 
+const customizeRequiredMark = (
+  label: React.ReactNode,
+  { required }: { required: boolean },
+) => (
+  <Flex align={"center"} gap={4}>
+    {label}
+    {required ? (
+      <Tag style={{ fontSize: 8 }} color="error">
+        обязательно
+      </Tag>
+    ) : null}
+  </Flex>
+);
+
 export interface CompanyFormProps {
   form?: FormInstance;
   initialValues?: Company;
-  onFinish?: (company: Company) => void;
-  onFinishFailed?:
-    | ((errorInfo: ValidateErrorEntity<Company>) => void)
-    | undefined;
-  onValuesChange?: (values: Company) => void;
+  onFinish?: (values: Company) => void;
 }
 
 const CompanyForm = (props: CompanyFormProps) => {
-  const { form, initialValues, onFinish, onFinishFailed, onValuesChange } =
-    props;
+  const { form, initialValues, onFinish } = props;
 
   const [innLength, setInnLength] = useState<number>(10);
   const [showIP, setShowIP] = useState<boolean>(false);
@@ -286,19 +295,16 @@ const CompanyForm = (props: CompanyFormProps) => {
   return (
     <Form
       id={"companyForm"}
-      layout="vertical"
-      colon={false}
+      layout={"vertical"}
       form={form}
-      onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
-      onValuesChange={(changedValues, values) => {
-        console.log("form values", JSON.stringify(values, null, 2));
-        onValuesChange?.(form?.getFieldsValue());
-      }}
+      colon={false}
+      requiredMark={customizeRequiredMark}
+      onFinish={(values) => onFinish?.(values)}
+      onValuesChange={(changedValues, values) =>
+        console.log(JSON.stringify(form?.getFieldsValue(), null, 2))
+      }
+      style={{ padding: 16 }}
       clearOnDestroy={true}
-      style={{
-        padding: "0 16px",
-      }}
     >
       {context}
       {/*НАЗВАНИЕ*/}

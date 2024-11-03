@@ -1,8 +1,8 @@
 import { checkDBAdminAccess } from "@/shared/auth/checkDBAdminAccess";
-import { ClientsPageUI } from "@/widgets/ClientsPageUI";
+import { ClientsWidget } from "../../../../widgets/ClientsWidget";
 
 export default async function ClientsPage() {
   await checkDBAdminAccess();
 
-  return <ClientsPageUI />;
+  return <ClientsWidget />;
 }

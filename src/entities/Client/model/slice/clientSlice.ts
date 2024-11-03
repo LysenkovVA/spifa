@@ -21,6 +21,9 @@ export const clientSlice = createSlice({
     clearAllData: (state, action) => {
       state.data = undefined;
       state.formData = undefined;
+      state.isLoading = false;
+      state.error = undefined;
+      state._isInitialized = false;
     },
   },
   extraReducers: (builder) => {

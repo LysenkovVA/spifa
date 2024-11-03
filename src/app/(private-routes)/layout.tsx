@@ -53,7 +53,7 @@ export default function UserLayout({ children }: { children: ReactNode }) {
             style={{
               height: `calc(100vh - 2 * ${token.Layout?.headerHeight}px)`,
             }}
-            width={160}
+            width={200}
           >
             <Flex>
               {/*<AppHeaderAvatar*/}

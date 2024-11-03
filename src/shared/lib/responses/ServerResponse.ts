@@ -1,10 +1,10 @@
 import { ZodError } from "zod";
 
 export interface ServerResponsePagination {
-  take: number | undefined;
-  skip: number | undefined;
-  search: string | undefined;
-  total: number | undefined;
+  take?: number;
+  skip?: number;
+  search?: string;
+  total?: number;
   // TODO Фильтры
 }
 
@@ -15,7 +15,7 @@ export class ServerResponse<T> {
   isOk: boolean;
   status: number;
   data: T;
-  pagination: ServerResponsePagination | undefined;
+  pagination?: ServerResponsePagination;
   statusText: string | undefined = undefined;
   errorMessages: string[] | undefined = [];
 

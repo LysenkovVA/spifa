@@ -29,7 +29,7 @@ export const getClientsIsInitialized = createSelector(
 );
 
 export const getClientsTake = createSelector(getClientsSchema, (schema) => {
-  return schema?.take ?? 5;
+  return schema?.take ?? 10;
 });
 
 export const getClientsSkip = createSelector(getClientsSchema, (schema) => {
@@ -46,3 +46,7 @@ export const getClientsTotalCount = createSelector(
     return schema?.totalCount ?? 0;
   },
 );
+
+export const getClientsHasMore = createSelector(getClientsSchema, (schema) => {
+  return schema?.hasMore ?? true;
+});

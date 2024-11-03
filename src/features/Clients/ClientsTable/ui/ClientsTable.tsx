@@ -1,36 +1,26 @@
 "use client";
 
-import { CSSProperties, useCallback, useState } from "react";
-import {
-  Button,
-  Drawer,
-  Flex,
-  Form,
-  notification,
-  Space,
-  Spin,
-  TableProps,
-  Tag,
-  Typography,
-} from "antd";
-import {
-  Client,
-  clientDetailsReducer,
-  deleteClientService,
-  fetchClientByIdService,
-  getClientDetails,
-  getClientDetailsIsLoading,
-  upsertClientService,
-} from "@/entities/Client";
-import { AppTable } from "@/shared/UI/AppTable";
-import { useAppDispatch } from "@/shared/lib/StoreProvider";
-import { useSelector } from "react-redux";
+import { Client, clientDetailsReducer } from "@/entities/Client";
+import { Flex, TableProps, Tag, Typography } from "antd";
 import {
   DynamicModuleLoader,
   ReducersList,
 } from "@/shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
-import { CloseOutlined, SaveOutlined } from "@ant-design/icons";
-import ClientForm from "@/entities/Client/ui/ClientForm/ClientForm";
+import { useAppDispatch } from "@/shared/lib/StoreProvider";
+import { memo, useCallback, useEffect } from "react";
+import { useSelector } from "react-redux";
+import {
+  getClients,
+  getClientsHasMore,
+  getClientsIsInitialized,
+  getClientsSkip,
+  getClientsTake,
+  getClientsTotalCount,
+} from "@/features/Clients/ClientsTable/model/selectors/clients.selectors";
+import { fetchClientsService } from "@/features/Clients/ClientsTable/model/services/fetchClients/fetchClientsService";
+import { clientsActions } from "@/features/Clients/ClientsTable/model/slice/clientsSlice";
+import { InfiniteTable } from "@/features/InfiniteTable";
+import { useRouter } from "next/navigation";
 
 const columns: TableProps<Client>["columns"] = [
   {
@@ -72,141 +62,62 @@ const reducers: ReducersList = {
   clientDetails: clientDetailsReducer,
 };
 
-export interface ClientsTableProps {
-  clients?: Client[];
-  style?: CSSProperties;
+export interface ClientsInfiniteTableProps {
+  height: string | number | undefined;
 }
 
-const ClientsTable = (props: ClientsTableProps) => {
-  const [notificationApi, contextHolder] = notification.useNotification();
-
-  const [form] = Form.useForm();
-
-  const [isEdit, setIsEdit] = useState<boolean>(false);
+const ClientsTable = memo((props: ClientsInfiniteTableProps) => {
+  const router = useRouter();
 
   const dispatch = useAppDispatch();
-  const initialValues = useSelector(getClientDetails);
-  const isLoading = useSelector(getClientDetailsIsLoading);
+  const clientsData = useSelector(getClients.selectAll);
+  const hasMore = useSelector(getClientsHasMore);
+  const take = useSelector(getClientsTake);
+  const skip = useSelector(getClientsSkip);
+  const totalCount = useSelector(getClientsTotalCount);
+  const isInitialized = useSelector(getClientsIsInitialized);
 
-  const onAddClick = useCallback(() => {
-    setIsEdit(true);
+  // TODO Сделать useInitialEffect для отработки одного раза
+  useEffect(() => {
+    if (!isInitialized) {
+      dispatch(fetchClientsService({ replaceData: true }));
+    }
   }, []);
 
+  const loadNextPart = useCallback(() => {
+    if (hasMore) {
+      dispatch(clientsActions.setSkip(skip + take));
+      dispatch(fetchClientsService({ replaceData: false }));
+    }
+  }, [dispatch, hasMore, skip, take]);
+
+  const onAddRecord = useCallback(() => {
+    router.push("/clients/new");
+  }, [router]);
+
   const onEditClick = useCallback(
-    (id: string) => {
-      dispatch(fetchClientByIdService({ id }));
-      setIsEdit(true);
+    (client: Client) => {
+      router.push(`/clients/${client.id}`);
     },
-    [dispatch],
-  );
-
-  const onDeleteClick = useCallback(
-    (id: string) => {
-      dispatch(deleteClientService({ clientId: id }));
-    },
-    [dispatch],
-  );
-
-  const onFinish = useCallback(
-    async (values: Client, usersToDeleteIds: Array<string>) => {
-      try {
-        const response = await dispatch(
-          upsertClientService({
-            client: {
-              ...values,
-              id: initialValues?.id ?? "",
-              usersToDeleteIds,
-            },
-          }),
-        ).unwrap();
-
-        if (response.isOk) {
-          setIsEdit(false);
-          notificationApi.success({
-            message: `Данные сохранены!`,
-            closable: false,
-            placement: "top",
-            duration: 3,
-          });
-        } else {
-          notificationApi.error({
-            message: JSON.stringify(response.errorMessages),
-            closable: false,
-            placement: "top",
-            duration: 5,
-          });
-        }
-      } catch (error) {
-        notificationApi.error({
-          message: JSON.stringify(error),
-          closable: false,
-          placement: "top",
-          duration: 5,
-        });
-      }
-    },
-    [dispatch, initialValues?.id, notificationApi],
-  );
-
-  const drawerTitleContent = (
-    <Flex align={"center"} justify={"space-between"}>
-      <Typography.Text type={"secondary"} style={{ fontSize: 16 }}>
-        {initialValues?.name ?? "Клиент"}
-      </Typography.Text>
-      <Space size={"small"}>
-        <Button
-          icon={<SaveOutlined />}
-          type={"primary"}
-          onClick={() => form.submit()}
-        >
-          {"Сохранить"}
-        </Button>
-        <Button
-          icon={<CloseOutlined />}
-          type={"primary"}
-          danger
-          onClick={() => setIsEdit(false)}
-        >
-          {"Отмена"}
-        </Button>
-      </Space>
-    </Flex>
+    [router],
   );
 
   return (
-    <>
-      {contextHolder}
-      <AppTable<Client>
-        style={{ height: "calc(100vh - 140px - 16px)" }}
-        data={props.clients}
+    <DynamicModuleLoader reducers={reducers}>
+      <InfiniteTable<Client>
+        style={{ width: "100%" }}
+        title={"Клиенты"}
         columns={columns}
-        onAddClick={onAddClick}
-        onEditClick={onEditClick}
-        onDeleteClick={onDeleteClick}
+        data={clientsData}
+        scrollHeight={props.height}
+        dataLength={totalCount}
+        hasMore={hasMore}
+        loadNextPartCallback={loadNextPart}
+        onAddRecord={onAddRecord}
+        onRowClick={onEditClick}
       />
-      {isEdit && (
-        <Drawer
-          styles={{ wrapper: { height: "90%" } }}
-          open={isEdit}
-          closable={false}
-          onClose={() => setIsEdit(false)}
-          placement={"bottom"}
-          title={drawerTitleContent}
-          destroyOnClose
-        >
-          <Spin spinning={isLoading}>
-            <DynamicModuleLoader reducers={reducers}>
-              <ClientForm
-                form={form}
-                initialValues={initialValues}
-                onFinish={onFinish}
-              />
-            </DynamicModuleLoader>
-          </Spin>
-        </Drawer>
-      )}
-    </>
+    </DynamicModuleLoader>
   );
-};
+});
 
 export default ClientsTable;

@@ -52,3 +52,10 @@ export const getCompaniesTotalCount = createSelector(
     return schema?.totalCount ?? 0;
   },
 );
+
+export const getCompaniesHasMore = createSelector(
+  getCompaniesSchema,
+  (schema) => {
+    return schema?.hasMore ?? true;
+  },
+);

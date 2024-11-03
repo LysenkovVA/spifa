@@ -5,10 +5,11 @@ export interface CompaniesSchema extends EntityState<Company, string> {
   isLoading?: boolean;
   error?: string;
   // Pagination
-  take?: number;
-  skip?: number;
+  take: number;
+  skip: number;
   search?: string;
-  totalCount?: number;
+  totalCount: number;
+  hasMore: boolean;
   // Initialization
   _isInitialized: boolean;
 }

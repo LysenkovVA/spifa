@@ -2,11 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CompaniesSchema } from "../types/CompaniesSchema";
 import { fetchCompaniesService } from "@/features/Companies/CompaniesTable";
 import { companiesAdapter } from "@/features/Companies/CompaniesTable/model/adapter/companiesAdapter";
-import {
-  createCompanyService,
-  deleteCompanyService,
-  updateCompanyService,
-} from "@/entities/Company";
+import { deleteCompanyService, upsertCompanyService } from "@/entities/Company";
 
 const initialState: CompaniesSchema = {
   ids: [],
@@ -17,6 +13,7 @@ const initialState: CompaniesSchema = {
   skip: 0,
   search: "",
   totalCount: 0,
+  hasMore: true,
   _isInitialized: false,
 };
 
@@ -31,6 +28,7 @@ export const companiesSlice = createSlice({
     setSearchQuery: (state, action: PayloadAction<string>) => {
       state.search = action.payload;
       state.skip = 0;
+      state.hasMore = true;
       state._isInitialized = false;
     },
   },
@@ -40,6 +38,7 @@ export const companiesSlice = createSlice({
         state.isLoading = true;
         state.error = undefined;
         state.totalCount = 0;
+        state.hasMore = true;
 
         // Если данные заменяются
         if (action.meta.arg.replaceData) {
@@ -60,74 +59,36 @@ export const companiesSlice = createSlice({
           companiesAdapter.addMany(state, action.payload.data);
         }
 
-        state.totalCount = action.payload.pagination?.total;
+        state.totalCount = action.payload.pagination?.total ?? 0;
+        state.hasMore = state.totalCount > state.skip + state.take;
         state._isInitialized = true;
       })
       .addCase(fetchCompaniesService.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
         state.totalCount = 0;
+        state.hasMore = true;
 
         // Если данные заменяются
         if (action.meta.arg.replaceData) {
           // Очищаем старые
           companiesAdapter.removeAll(state);
         }
-
-        // notification.error({
-        //   message: action.payload,
-        //   closable: false,
-        //   placement: "top",
-        //   duration: 5,
-        // });
-      })
-      // Добавление компании
-      .addCase(createCompanyService.fulfilled, (state, action) => {
-        companiesAdapter.upsertOne(state, action.payload.data);
-        if (state.totalCount) {
-          state.totalCount = state.ids.length;
-        } else {
-          state.totalCount = 1;
-        }
-
-        // notification.success({
-        //   message: `Компания "${action.payload.data.name}" создана!`,
-        //   closable: false,
-        //   placement: "top",
-        //   duration: 3,
-        // });
-      })
-      .addCase(createCompanyService.rejected, (state, action) => {
-        // notification.error({
-        //   message: action.payload,
-        //   closable: false,
-        //   placement: "top",
-        //   duration: 5,
-        // });
       })
       // Обновление данных компании
-      .addCase(updateCompanyService.fulfilled, (state, action) => {
+      .addCase(upsertCompanyService.pending, (state, action) => {
+        state.error = undefined;
+      })
+      .addCase(upsertCompanyService.fulfilled, (state, action) => {
         companiesAdapter.upsertOne(state, action.payload.data);
         if (state.totalCount) {
           state.totalCount = state.ids.length;
         } else {
           state.totalCount = 1;
         }
-
-        // notification.success({
-        //   message: `Данные компании "${action.payload.data.name}" обновлены!`,
-        //   closable: false,
-        //   placement: "top",
-        //   duration: 3,
-        // });
       })
-      .addCase(updateCompanyService.rejected, (state, action) => {
-        // notification.error({
-        //   message: action.payload,
-        //   closable: false,
-        //   placement: "top",
-        //   duration: 5,
-        // });
+      .addCase(upsertCompanyService.rejected, (state, action) => {
+        state.error = action.payload;
       })
       // Удаление компании
       .addCase(deleteCompanyService.fulfilled, (state, action) => {
@@ -137,12 +98,6 @@ export const companiesSlice = createSlice({
         } else {
           state.totalCount = 0;
         }
-        // notification.success({
-        //   message: `Компания "${action.payload.data.name}" удалена!`,
-        //   closable: false,
-        //   placement: "top",
-        //   duration: 3,
-        // });
       });
   },
 });

@@ -1,6 +1,6 @@
 import { auth } from "../../../../auth";
 import { redirect } from "next/navigation";
-import { CompaniesPageUI } from "@/widgets/CompaniesPageUI";
+import { CompaniesWidget } from "../../../widgets/CompaniesWidget";
 
 export default async function CompaniesPage() {
   const session = await auth();
@@ -9,5 +9,5 @@ export default async function CompaniesPage() {
     redirect("/denied");
   }
 
-  return <CompaniesPageUI />;
+  return <CompaniesWidget />;
 }

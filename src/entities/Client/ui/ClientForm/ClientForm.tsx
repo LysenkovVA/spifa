@@ -4,21 +4,41 @@ import {
   Button,
   Card,
   Col,
-  Collapse,
-  Divider,
   Flex,
   Form,
   FormInstance,
   Input,
   Row,
   Select,
+  Tabs,
+  TabsProps,
+  Tag,
   Typography,
 } from "antd";
-import { MinusCircleOutlined, PlusCircleFilled } from "@ant-design/icons";
+import {
+  LockOutlined,
+  MinusCircleOutlined,
+  PlusCircleFilled,
+  UserOutlined,
+} from "@ant-design/icons";
 import { Client } from "@/entities/Client";
 import { ClientUserRole } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { CompanySvg, UsersSvg } from "@/shared/assets";
+
+const customizeRequiredMark = (
+  label: React.ReactNode,
+  { required }: { required: boolean },
+) => (
+  <Flex align={"center"} gap={4}>
+    {label}
+    {required ? (
+      <Tag style={{ fontSize: 8 }} color="error">
+        обязательно
+      </Tag>
+    ) : null}
+  </Flex>
+);
 
 export interface ClientFormProps {
   form?: FormInstance;
@@ -37,149 +57,112 @@ const ClientForm = (props: ClientFormProps) => {
 
   const userProfileContent = (userIndex: number) => (
     <>
-      <Row gutter={8}>
+      <Row gutter={8} align={"middle"} justify={"start"}>
         <Col span={8}>
-          <Form.Item
-            layout={"horizontal"}
-            label={"Фамилия"}
-            name={[userIndex, "user", "surname"]}
-          >
-            <Input placeholder={"Укажите фамилию..."} />
+          <Form.Item label={"Фамилия"} name={[userIndex, "user", "surname"]}>
+            <Input placeholder={"Укажите фамилию"} />
+          </Form.Item>
+        </Col>
+        <Col span={8}>
+          <Form.Item label={"Имя"} name={[userIndex, "user", "name"]}>
+            <Input placeholder={"Укажите имя"} />
           </Form.Item>
         </Col>
         <Col span={8}>
           <Form.Item
-            layout={"horizontal"}
-            label={"Имя"}
-            name={[userIndex, "user", "name"]}
-          >
-            <Input placeholder={"Укажите имя..."} />
-          </Form.Item>
-        </Col>
-        <Col span={8}>
-          <Form.Item
-            layout={"horizontal"}
             label={"Отчество"}
             name={[userIndex, "user", "patronymic"]}
           >
-            <Input placeholder={"Укажите отчество..."} />
+            <Input placeholder={"Укажите отчество"} />
           </Form.Item>
         </Col>
       </Row>
-      <Row gutter={8}>
+      <Row gutter={8} align={"middle"} justify={"start"}>
         <Col span={8}>
-          <Form.Item
-            layout={"horizontal"}
-            label={"E-mail"}
-            name={[userIndex, "user", "email"]}
-          >
-            <Input placeholder={"Укажите e-mail..."} />
+          <Form.Item label={"E-mail"} name={[userIndex, "user", "email"]}>
+            <Input placeholder={"Укажите e-mail"} />
           </Form.Item>
         </Col>
         <Col span={8}>
-          <Form.Item
-            layout={"horizontal"}
-            label={"Телефон"}
-            name={[userIndex, "user", "phone"]}
-          >
-            <Input placeholder={"Укажите телефон..."} />
+          <Form.Item label={"Телефон"} name={[userIndex, "user", "phone"]}>
+            <Input placeholder={"Укажите телефон"} />
           </Form.Item>
         </Col>
       </Row>
     </>
   );
 
-  return (
-    <Form
-      id={"clientForm"}
-      layout={"vertical"}
-      form={form}
-      labelCol={{ span: 4 }}
-      colon={false}
-      onFinish={(values) => onFinish?.(values, usersToDeleteIds)}
-      onValuesChange={(changedValues, values) =>
-        console.log(JSON.stringify(form?.getFieldsValue(), null, 2))
-      }
-      style={{ padding: 16 }}
-      clearOnDestroy={true}
-    >
-      <Divider orientation={"left"}>
-        <Flex align={"center"} gap={4}>
-          <CompanySvg width={24} height={24} />
-          <Typography.Text style={{ fontSize: 16 }} type={"secondary"}>
-            {"Сведения о клиенте"}
-          </Typography.Text>
-        </Flex>
-      </Divider>
+  const clientDetailsContent = (
+    <>
       <Form.Item
-        label={"Название организации"}
+        label={
+          <Flex>
+            <Typography.Text>{"Название"}</Typography.Text>
+          </Flex>
+        }
         name={["name"]}
         rules={[{ required: true, message: "Необходимо указать название" }]}
       >
-        <Input
-          style={{ width: "100%" }}
-          placeholder={`ООО "Лучшая компания"`}
-        />
+        <Input style={{ width: "100%" }} placeholder={`Укажите название`} />
       </Form.Item>
-      <Form.Item label={"Адрес организации"} name={["address"]}>
+      <Form.Item label={"Адрес"} name={["address"]}>
         <Input
           style={{ width: "100%" }}
           placeholder="Укажите адрес организации"
         />
       </Form.Item>
-      <Form.Item label={"Телефон организации"} name={["phone"]}>
+      <Form.Item label={"Телефон"} name={["phone"]}>
         <Input style={{ width: "100%" }} placeholder="Укажите телефон" />
       </Form.Item>
-      <Divider orientation={"left"}>
-        <Flex align={"center"} gap={4}>
-          <UsersSvg width={24} height={24} />
-          <Typography.Text style={{ fontSize: 16 }} type={"secondary"}>
-            {"Пользователи"}
-          </Typography.Text>
-        </Flex>
-      </Divider>
+    </>
+  );
+
+  const usersContent = (
+    <>
       <Form.List name={["users"]}>
         {(fields, { add, remove, move }) => (
           <>
             {fields.map(({ key, name: userIndex, ...restField }) => (
-              <Flex key={userIndex} gap={4}>
-                <Card
-                  size={"small"}
-                  title={
-                    <Button
-                      type={"link"}
-                      icon={<MinusCircleOutlined style={{ color: "red" }} />}
-                      onClick={() => {
-                        // Получаем id удаляемой записи
-                        const id = form?.getFieldValue([
-                          "users",
-                          userIndex,
-                          "user",
-                          "id",
-                        ]);
+              <Flex
+                align={"center"}
+                justify={"center"}
+                key={userIndex}
+                gap={4}
+                style={{
+                  marginBottom: 8,
+                  width: "100%",
+                }}
+              >
+                <Flex align={"center"} justify={"center"} gap={4}>
+                  <MinusCircleOutlined
+                    style={{ color: "red" }}
+                    onClick={() => {
+                      // Получаем id удаляемой записи
+                      const id = form?.getFieldValue([
+                        "users",
+                        userIndex,
+                        "user",
+                        "id",
+                      ]);
 
-                        // Если id есть, значит запись необходимо будет удалять из БД
-                        if (id) {
-                          setUsersToDeleteIds([...usersToDeleteIds, id]);
-                        }
-                        remove(userIndex);
-                      }}
-                    >
-                      {"Удалить"}
-                    </Button>
-                  }
-                  style={{
-                    marginBottom: 8,
-                    width: "100%",
-                  }}
-                >
-                  <Divider orientation={"left"}>
-                    <Typography.Text>{"Учетная запись"}</Typography.Text>
-                  </Divider>
-                  <Row gutter={8}>
+                      // Если id есть, значит запись необходимо будет удалять из БД
+                      if (id) {
+                        setUsersToDeleteIds([...usersToDeleteIds, id]);
+                      }
+                      remove(userIndex);
+                    }}
+                  />
+                </Flex>
+                <Card style={{ width: "100%" }}>
+                  <Row
+                    gutter={8}
+                    align={"middle"}
+                    justify={"start"}
+                    style={{ width: "100%" }}
+                  >
                     <Col span={8}>
                       <Form.Item
-                        layout={"horizontal"}
+                        // layout={"horizontal"}
                         label={"Логин"}
                         name={[userIndex, "user", "login"]}
                         rules={[
@@ -189,12 +172,15 @@ const ClientForm = (props: ClientFormProps) => {
                           },
                         ]}
                       >
-                        <Input placeholder={"Укажите логин"} />
+                        <Input
+                          prefix={<UserOutlined />}
+                          placeholder={"Укажите логин"}
+                        />
                       </Form.Item>
                     </Col>
                     <Col span={8}>
                       <Form.Item
-                        layout={"horizontal"}
+                        // layout={"horizontal"}
                         label={"Пароль"}
                         name={[userIndex, "user", "password"]}
                         rules={[
@@ -205,6 +191,15 @@ const ClientForm = (props: ClientFormProps) => {
                         ]}
                       >
                         <Input
+                          prefix={<LockOutlined />}
+                          disabled={
+                            form?.getFieldValue([
+                              "users",
+                              userIndex,
+                              "user",
+                              "id",
+                            ]) !== undefined
+                          }
                           type={"password"}
                           placeholder={"Укажите пароль..."}
                         />
@@ -212,7 +207,7 @@ const ClientForm = (props: ClientFormProps) => {
                     </Col>
                     <Col span={8}>
                       <Form.Item
-                        layout={"horizontal"}
+                        //layout={"horizontal"}
                         label={"Роль"}
                         name={[userIndex, "clientUserRole"]}
                         rules={[
@@ -238,18 +233,7 @@ const ClientForm = (props: ClientFormProps) => {
                       </Form.Item>
                     </Col>
                   </Row>
-
-                  <Collapse
-                    ghost={true}
-                    items={[
-                      {
-                        key: "1",
-                        label: "Данные профиля",
-                        children: userProfileContent(userIndex),
-                      },
-                    ]}
-                    // defaultActiveKey={["1"]}
-                  />
+                  {userProfileContent(userIndex)}
                 </Card>
               </Flex>
             ))}
@@ -266,6 +250,51 @@ const ClientForm = (props: ClientFormProps) => {
           </>
         )}
       </Form.List>
+    </>
+  );
+
+  const tabsContent: TabsProps["items"] = [
+    {
+      key: "1",
+      label: (
+        <Flex align={"center"} gap={4}>
+          <CompanySvg width={24} height={24} />
+          <Typography.Text style={{ fontSize: 16 }} type={"secondary"}>
+            {"Сведения о клиенте"}
+          </Typography.Text>
+        </Flex>
+      ),
+      children: clientDetailsContent,
+    },
+    {
+      key: "2",
+      label: (
+        <Flex align={"center"} gap={4}>
+          <UsersSvg width={24} height={24} />
+          <Typography.Text style={{ fontSize: 16 }} type={"secondary"}>
+            {"Пользователи"}
+          </Typography.Text>
+        </Flex>
+      ),
+      children: usersContent,
+    },
+  ];
+
+  return (
+    <Form
+      id={"clientForm"}
+      layout={"vertical"}
+      form={form}
+      colon={false}
+      requiredMark={customizeRequiredMark}
+      onFinish={(values) => onFinish?.(values, usersToDeleteIds)}
+      onValuesChange={(changedValues, values) =>
+        console.log(JSON.stringify(form?.getFieldsValue(), null, 2))
+      }
+      style={{ padding: 16 }}
+      clearOnDestroy={true}
+    >
+      <Tabs items={tabsContent} />
     </Form>
   );
 };

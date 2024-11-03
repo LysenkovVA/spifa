@@ -1,4 +1,3 @@
-import { Space } from "antd";
 import { BankOutlined, UserOutlined } from "@ant-design/icons";
 import { useDBUser } from "@/shared/hooks/useUserRole/useDBUser";
 
@@ -21,37 +20,14 @@ export const useMenuItems = () => {
   const items: AppMenuItem[] = [
     {
       key: "1",
-      label: (
-        <Space size={"small"}>
-          {/*<OrderedListOutlined /> */}
-          {"СПИСКИ"}
-        </Space>
-      ),
-      type: "group",
-      targetUrl: "",
+      label: `Компании`,
+      icon: <BankOutlined />,
+      targetUrl: "/companies",
       isPrivate: true,
       isDBAdmin: false,
-      children: [
-        {
-          key: "2",
-          label: `Компании`,
-          icon: <BankOutlined />,
-          targetUrl: "/companies",
-          isPrivate: true,
-          isDBAdmin: false,
-        },
-      ],
     },
-    // {
-    //   key: "3",
-    //   label: `Дашборд`,
-    //   icon: <DashboardOutlined />,
-    //   targetUrl: "/dashboard",
-    //   isPrivate: true,
-    //   isDBAdmin: true,
-    // },
     {
-      key: "4",
+      key: "2",
       label: `Клиенты`,
       icon: <UserOutlined />,
       targetUrl: "/clients",

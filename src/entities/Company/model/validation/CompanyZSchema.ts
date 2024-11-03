@@ -1,7 +1,7 @@
 import z from "zod";
 
 export const CompanyZSchema = z.object({
-  id: z.string().cuid().optional(),
+  id: z.string().optional(),
   name: z.string({
     required_error: 'Поле "Название" не указано',
     invalid_type_error: 'Поле "Название" не является строкой',

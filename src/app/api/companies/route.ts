@@ -3,18 +3,23 @@ import { ServerResponse } from "@/shared/lib/responses/ServerResponse";
 import prisma from "../../../../prisma/db";
 import { Company } from "@/entities/Company";
 
-export async function GET(request: NextRequest, response: Response) {
+export async function POST(request: NextRequest, response: Response) {
+  const body: { take: number; skip: number } = await request.json();
+
   try {
     // Результат
     const [companies, count] = await prisma.$transaction([
-      prisma.company.findMany(),
+      prisma.company.findMany({
+        take: body.take,
+        skip: body.skip,
+      }),
       prisma.company.count(),
     ]);
 
     return NextResponse.json(
       ServerResponse.Ok(companies as Company[], {
-        take: undefined,
-        skip: undefined,
+        take: body.take,
+        skip: body.skip,
         search: undefined,
         total: count,
       }),

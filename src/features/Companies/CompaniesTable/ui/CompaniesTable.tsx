@@ -1,11 +1,27 @@
 "use client";
 
-import { Flex, Space, Table, TableProps, Typography } from "antd";
-import { Company } from "@/entities/Company";
-import { EditCompanyButton } from "@/features/Companies/EditCompanyButton";
-import { EditOutlined } from "@ant-design/icons";
-import { DeleteCompanyButton } from "@/features/Companies/DeleteCompanyButton";
+import { Flex, TableProps, Typography } from "antd";
+import { Company, companyDetailsReducer } from "@/entities/Company";
 import dayjs from "dayjs";
+import {
+  DynamicModuleLoader,
+  ReducersList,
+} from "@/shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
+import { memo, useCallback, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/shared/lib/StoreProvider";
+import { useSelector } from "react-redux";
+import {
+  companiesActions,
+  fetchCompaniesService,
+  getCompanies,
+  getCompaniesHasMore,
+  getCompaniesIsInitialized,
+  getCompaniesSkip,
+  getCompaniesTake,
+  getCompaniesTotalCount,
+} from "@/features/Companies/CompaniesTable";
+import { InfiniteTable } from "@/features/InfiniteTable";
 
 export const StatusMapper = (status: string) => {
   switch (status) {
@@ -73,50 +89,85 @@ const columns: TableProps<Company>["columns"] = [
       </Flex>
     ),
   },
-  {
-    title: "",
-    dataIndex: "actions",
-    key: "actions",
-    width: "40px",
-
-    render: (_, record) => (
-      <Space size={"small"}>
-        <EditCompanyButton
-          companyId={record.id}
-          title={""}
-          icon={<EditOutlined />}
-        />
-        <DeleteCompanyButton companyId={record.id} />
-      </Space>
-    ),
-  },
+  // {
+  //   title: "",
+  //   dataIndex: "actions",
+  //   key: "actions",
+  //   width: "40px",
+  //
+  //   render: (_, record) => (
+  //     <Space size={"small"}>
+  //       <EditCompanyButton
+  //         companyId={record.id}
+  //         title={""}
+  //         icon={<EditOutlined />}
+  //       />
+  //       <DeleteCompanyButton companyId={record.id} />
+  //     </Space>
+  //   ),
+  // },
 ];
 
+const reducers: ReducersList = {
+  companyDetails: companyDetailsReducer,
+};
+
 export interface CompanyTableProps {
-  data?: Company[];
+  height: string | number | undefined;
 }
 
-const CompaniesTable = (props: CompanyTableProps) => {
-  const { data } = props;
+const CompaniesTable = memo((props: CompanyTableProps) => {
+  const router = useRouter();
+
+  const dispatch = useAppDispatch();
+  const companiesData = useSelector(getCompanies.selectAll);
+  const hasMore = useSelector(getCompaniesHasMore);
+  const take = useSelector(getCompaniesTake);
+  const skip = useSelector(getCompaniesSkip);
+  const totalCount = useSelector(getCompaniesTotalCount);
+  const isInitialized = useSelector(getCompaniesIsInitialized);
+
+  // TODO Сделать useInitialEffect для отработки одного раза
+  useEffect(() => {
+    if (!isInitialized) {
+      dispatch(fetchCompaniesService({ replaceData: true }));
+    }
+  }, []);
+
+  const loadNextPart = useCallback(() => {
+    if (hasMore) {
+      dispatch(companiesActions.setSkip(skip + take));
+      dispatch(fetchCompaniesService({ replaceData: false }));
+    }
+  }, [dispatch, hasMore, skip, take]);
+
+  const onAddRecord = useCallback(() => {
+    router.push("/companies/new");
+  }, [router]);
+
+  const onEditClick = useCallback(
+    (client: Company) => {
+      router.push(`/companies/${client.id}`);
+    },
+    [router],
+  );
 
   return (
-    <Table<Company>
-      columns={columns}
-      onRow={(record, rowIndex) => {
-        return {
-          onClick: (event) => {}, // click row
-          onDoubleClick: (event) => {}, // double click row
-          onContextMenu: (event) => {}, // right button click row
-          onMouseEnter: (event) => {}, // mouse enter row
-          onMouseLeave: (event) => {}, // mouse leave row
-        };
-      }}
-      // pagination={{ position: [top, bottom] }}
-      dataSource={data}
-      rowKey={(record) => record.id}
-      pagination={false}
-    />
+    <DynamicModuleLoader reducers={reducers}>
+      <InfiniteTable<Company>
+        style={{ width: "100%" }}
+        title={"Компании"}
+        columns={columns}
+        data={companiesData}
+        scrollHeight={props.height}
+        dataLength={totalCount}
+        hasMore={hasMore}
+        loadNextPartCallback={loadNextPart}
+        onAddRecord={onAddRecord}
+        onRowClick={onEditClick}
+      />
+    </DynamicModuleLoader>
   );
-};
+});
 
 export default CompaniesTable;

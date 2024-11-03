@@ -13,11 +13,18 @@ export const fetchClientsService = createAsyncThunk<
   FetchClientsServiceProps,
   ThunkConfig<string>
 >("fetchClientsService", async (props, thunkApi) => {
-  const { rejectWithValue } = thunkApi;
+  const { rejectWithValue, getState } = thunkApi;
+
+  // БРАТЬ ЗНАЧЕНИЯ ИЗ СТЕЙТА НУЖНО ТОЛЬКО ТАК
+  // useSelector будет выдавать ошибку
+  const state = getState();
+
+  const take = state.clients?.take;
+  const skip = state.clients?.skip;
 
   try {
     // Отправляем запрос
-    const response = await fetchClients();
+    const response = await fetchClients(take, skip);
 
     if (!response.isOk) {
       return rejectWithValue(
