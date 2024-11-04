@@ -9,6 +9,7 @@ import { primaryTheme } from "@/shared/config/themes/primaryTheme";
 import { StoreProvider } from "@/shared/lib/StoreProvider";
 import { SessionProvider } from "next-auth/react";
 import { ContentWrapper } from "../shared/UI/ContentWrapper";
+import { auth } from "../../auth";
 
 // для локализации календаря
 dayjs.locale("ru");
@@ -31,15 +32,17 @@ export const metadata: Metadata = {
   description: "",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Определяем сессию, чтобы передавать ее в стор
+  const session = await auth();
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <SessionProvider>
+        <SessionProvider session={session}>
           <StoreProvider>
             {/*Ant Design config provider*/}
             <ConfigProvider locale={ru_RU} theme={primaryTheme}>

@@ -37,7 +37,8 @@ export const AppMenu = memo((props: AppMenuProps) => {
           key: String(item.key),
           // type: item.type,
           label: item.label,
-          // icon: item.icon,
+          //
+          icon: item.icon,
           children: item.children?.map((child) => {
             return {
               key: String(child.key),

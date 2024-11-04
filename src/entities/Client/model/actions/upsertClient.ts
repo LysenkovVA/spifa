@@ -10,7 +10,6 @@ export async function upsertClient(
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_PATH}/clients/upsert`,
     {
-      // method: "PATCH",
       method: "POST",
       headers: {
         "Content-Type": "application/json",

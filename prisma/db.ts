@@ -6,7 +6,10 @@ import { Prisma, PrismaClient } from "@prisma/client";
 
 const prismaClientSingleton = () => {
   return new PrismaClient({
-    log: ["query", "info", "warn", "error"],
+    log:
+      process.env.NODE_ENV === "development"
+        ? ["warn", "error"] // Доступно "query", "info", "warn", "error"
+        : undefined,
     transactionOptions: {
       isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
       maxWait: 5000, // default: 2000

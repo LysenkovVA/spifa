@@ -3,6 +3,7 @@ import { Company } from "../types/Company";
 
 /**
  * @param company
+ *
  */
 export async function upsertCompany(
   company: Company,
@@ -14,6 +15,7 @@ export async function upsertCompany(
       headers: {
         "Content-Type": "application/json",
       },
+
       body: JSON.stringify(company),
     },
   );

@@ -2,8 +2,8 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 
 import { ServerResponse } from "@/shared/lib/responses/ServerResponse";
 import { Company } from "../types/Company";
-import { ThunkConfig } from "@/shared/lib/StoreProvider/config/store";
 import { fetchCompanyById } from "../actions/fetchCompanyById";
+import { Session } from "next-auth";
 
 export interface FetchCompanyByIdProps {
   id: string;
@@ -12,9 +12,10 @@ export interface FetchCompanyByIdProps {
 export const fetchCompanyByIdService = createAsyncThunk<
   ServerResponse<Company>,
   FetchCompanyByIdProps,
-  ThunkConfig<string>
+  { rejectValue: string; extra: { session: Session | null | undefined } }
+  // ThunkConfig<string>
 >("fetchCompanyByIdService", async (props, thunkApi) => {
-  const { rejectWithValue } = thunkApi;
+  const { rejectWithValue, extra } = thunkApi;
 
   try {
     const response = await fetchCompanyById(props.id);

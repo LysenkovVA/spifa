@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { ServerResponse } from "@/shared/lib/responses/ServerResponse";
 import { Client } from "../types/Client";
 import { ThunkConfig } from "@/shared/lib/StoreProvider/config/store";
-import { upsertClient } from "../actions/upsertClient";
+import { upsertClient } from "@/entities/Client";
 
 export interface UpsertClientProps {
   client: Client;

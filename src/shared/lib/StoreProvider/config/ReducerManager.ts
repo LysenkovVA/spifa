@@ -1,6 +1,7 @@
 import { combineReducers, StoreEnhancer, UnknownAction } from "redux";
 import { EnhancedStore, ThunkDispatch, Tuple } from "@reduxjs/toolkit";
 import { StateSchema } from "./StateSchema";
+import { ThunkExtraArg } from "@/shared/lib/StoreProvider/config/store";
 
 export function createReducerManager(initialReducers: any) {
   // Create an object which maps keys to reducers
@@ -70,7 +71,7 @@ export interface TStore
     Tuple<
       [
         StoreEnhancer<{
-          dispatch: ThunkDispatch<StateSchema, undefined, UnknownAction>;
+          dispatch: ThunkDispatch<StateSchema, ThunkExtraArg, UnknownAction>;
         }>,
         StoreEnhancer,
       ]

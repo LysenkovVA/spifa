@@ -1,9 +1,8 @@
-import Credentials from "@auth/core/providers/credentials";
+import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "../../../../prisma/db";
 import type { Adapter } from "next-auth/adapters"; // Нужно это добавить, чтоб не было ошибки в adapter https://stackoverflow.com/questions/76503606/next-auth-error-adapter-is-not-assignable-to-type-adapter-undefined
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { NextAuthConfig } from "next-auth";
-
 import bcrypt from "bcryptjs";
 import { User as UserEntity } from "@/entities/User";
 
@@ -20,7 +19,7 @@ export const authConfig: NextAuthConfig = {
   secret: process.env.AUTH_SECRET,
   debug: true,
   providers: [
-    Credentials({
+    CredentialsProvider({
       name: "Credentials",
       credentials: {
         login: {
@@ -39,7 +38,7 @@ export const authConfig: NextAuthConfig = {
 
         const candidate = await prisma.user.findFirst({
           where: {
-            login: credentials.login,
+            login: credentials.login!,
           },
           include: {
             clients: { include: { client: true } },
