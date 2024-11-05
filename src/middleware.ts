@@ -3,9 +3,10 @@ import { auth } from "../auth";
 import { ConsoleColor, ConsoleLog } from "@/shared/lib/consoleLog";
 
 // ДОСТУПНЫЕ МАРШРУТЫ
+// ❗️При добавлении маршрутов не забыть добавить их в AppMenu
 const dbAdminRoutes = ["/clients", "/clients/"];
 const dbUserRoutes = ["/companies", "/companies/"];
-const commonPrivateRoutes = ["/profile"];
+const commonPrivateRoutes = ["/profile/"];
 const publicRoutes = ["/", "/denied"];
 
 export default async function middleware(req: NextRequest) {

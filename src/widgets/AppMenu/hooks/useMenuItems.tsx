@@ -14,6 +14,7 @@ export interface AppMenuItem {
   children?: Array<AppMenuItem>;
 }
 
+// ❗️При добавлении маршрутов не забыть добавить их в middleware
 export const useMenuItems = () => {
   const [user, isDBAdmin, isDBUser] = useDBUser();
 

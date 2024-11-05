@@ -23,7 +23,7 @@ const AppHeaderAvatar = (props: AppHeaderAvatarProps) => {
       gap={4}
       vertical
       style={{ ...props.style, cursor: "pointer" }}
-      onClick={() => router.push("/profile")}
+      onClick={() => router.push(`/profile/${session?.user?.id}`)}
     >
       <Avatar
         size={props.avatarSize ?? 40}

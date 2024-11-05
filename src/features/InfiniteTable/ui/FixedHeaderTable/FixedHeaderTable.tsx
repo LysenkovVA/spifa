@@ -86,6 +86,7 @@ export const FixedHeaderTable = <T extends { id: string }>(
       dataSource={data}
       rowKey={(record) => record.id}
       pagination={false}
+      sticky={true}
     />
   );
 };

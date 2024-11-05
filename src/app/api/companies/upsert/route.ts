@@ -4,11 +4,25 @@ import prisma from "../../../../../prisma/db";
 import { ServerResponse } from "@/shared/lib/responses/ServerResponse";
 import { CompanyType } from "@prisma/client";
 import dayjs from "dayjs";
+import { auth } from "../../../../../auth";
 
 export async function POST(request: NextRequest) {
   try {
+    //return NextResponse.json(ServerResponse.ServerError(request.body));
     // Получаем тело из запроса
     const data: Company = await request.json();
+
+    const session = await auth();
+
+    // TODO переделать структуру БД
+    const currentClientId = session?.user?.clients?.[0].client?.id;
+
+    // const sessionToken = request.cookies.get('next-auth.session-token');
+    //
+    // const decoded = await decode({
+    //   token: sessionToken,
+    //   secret: process.env.NEXTAUTH_SECRET,
+    // });
 
     // Запускаем транзакцию по созданию/обновлению клиента
     const updatedCompany = await prisma.$transaction(async (tx) => {
@@ -45,6 +59,7 @@ export async function POST(request: NextRequest) {
           liquidationDate: data.liquidationDate
             ? dayjs(data.liquidationDate).toDate()
             : null,
+          client: { connect: { id: currentClientId } },
         },
         update: {
           name: validateCompany.name,
@@ -74,6 +89,7 @@ export async function POST(request: NextRequest) {
           liquidationDate: data.liquidationDate
             ? dayjs(data.liquidationDate).toDate()
             : null,
+          client: { connect: { id: currentClientId } },
         },
         where: { id: validateCompany.id ?? "" },
       });

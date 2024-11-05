@@ -1,50 +1,65 @@
 "use client";
-import { Divider, Flex, Space, Tag, Typography } from "antd";
-import { useSession } from "next-auth/react";
+import { Avatar, Divider, Flex, Space, Tag, Typography } from "antd";
 import {
-  ContactsOutlined,
   MailOutlined,
   PhoneOutlined,
   SafetyOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
+import { User } from "@/entities/User";
 
-const ProfileView = () => {
-  const { data: session } = useSession();
+export interface ProfileViewProps {
+  profile: User;
+}
+
+const ProfileView = (props: ProfileViewProps) => {
+  const { profile } = props;
 
   return (
     <>
-      <Flex align={"start"} justify={"center"} vertical>
-        <Typography.Title style={{ marginTop: 0 }} level={3}>
-          {session?.user.surname}
-        </Typography.Title>
-        <Typography.Title style={{ marginTop: 0 }} level={4}>
-          {session?.user.name}
-        </Typography.Title>
+      <Flex align={"center"} justify={"start"} gap={16}>
+        <Avatar size={150} icon={<UserOutlined />} />
+        <Flex align={"start"} justify={"center"} vertical>
+          <Typography.Title
+            type={"secondary"}
+            style={{ marginTop: 0 }}
+            level={3}
+          >
+            {profile.surname}
+          </Typography.Title>
+          <Flex align={"start"} justify={"start"} gap={8}>
+            <Typography.Title
+              type={"secondary"}
+              style={{ marginTop: 0 }}
+              level={4}
+            >
+              {profile.name}
+            </Typography.Title>
+            <Typography.Title
+              type={"secondary"}
+              style={{ marginTop: 0 }}
+              level={4}
+            >
+              {profile.patronymic}
+            </Typography.Title>
+          </Flex>
+          <Flex align={"start"} justify={"start"} vertical gap={6}>
+            <Space size={"small"}>
+              <MailOutlined />
+              <Typography.Text style={{ fontSize: 12 }}>
+                {profile.email}
+              </Typography.Text>
+            </Space>
+            <Space size={"small"}>
+              <PhoneOutlined />
+              <Typography.Text style={{ fontSize: 12 }}>
+                {profile.phone}
+              </Typography.Text>
+            </Space>
+          </Flex>
+        </Flex>
       </Flex>
-      <Divider orientation={"left"}>
-        <Space size={"middle"}>
-          <ContactsOutlined />
-          <Typography.Text type={"secondary"} style={{ fontSize: 16 }}>
-            {"Контакты"}
-          </Typography.Text>
-        </Space>
-      </Divider>
-      <Flex align={"start"} justify={"center"} gap={8} vertical>
-        <Space size={"middle"}>
-          <MailOutlined />
-          <Typography.Text style={{ fontSize: 16 }}>
-            {session?.user.email}
-          </Typography.Text>
-        </Space>
-        <Space size={"middle"}>
-          <PhoneOutlined />
-          <Typography.Text style={{ fontSize: 16 }}>
-            {session?.user.phone}
-          </Typography.Text>
-        </Space>
-      </Flex>
-
-      {session?.user.clients?.map((clientOnUser) => (
+      {profile.clients?.map((clientOnUser) => (
         <div key={clientOnUser.client?.id}>
           <Divider orientation={"left"}>
             <Space size={"middle"}>
@@ -55,22 +70,12 @@ const ProfileView = () => {
             </Space>
           </Divider>
           <Space size={"middle"}>
-            <Typography.Text
-              // type={"success"}
-              style={{
-                backgroundColor: "lightgreen",
-                border: "solid 1px black",
-                borderRadius: 12,
-                padding: 6,
-              }}
-            >
-              {clientOnUser.clientUserRole}
-            </Typography.Text>
+            <Tag color={"green"}>{clientOnUser.clientUserRole}</Tag>
           </Space>
         </div>
       ))}
-      <Divider orientation={"left"}>Роли БД</Divider>
-      {session?.user?.dbRoles?.map((role) => <Tag key={role}>{role}</Tag>)}
+      {/*<Divider orientation={"left"}>Роли БД</Divider>*/}
+      {/*{profile.dbRoles?.map((role) => <Tag key={role}>{role}</Tag>)}*/}
     </>
   );
 };

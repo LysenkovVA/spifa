@@ -13,7 +13,6 @@ import {
   Select,
   Tabs,
   TabsProps,
-  Tag,
 } from "antd";
 import { Company } from "@/entities/Company";
 import { useCallback, useEffect, useState } from "react";
@@ -30,20 +29,7 @@ import { CompanyNameInputWithSearch } from "@/features/Companies/CompanyNameInpu
 import { Suggestion } from "../../model/types/DaDataCompanyInterfaces";
 import SearchableInnOrKppDigitInput from "@/features/Companies/SearchableINNDigitInput/ui/SearchableInnOrKppDigitInput";
 import useModal from "antd/es/modal/useModal";
-
-const customizeRequiredMark = (
-  label: React.ReactNode,
-  { required }: { required: boolean },
-) => (
-  <Flex align={"center"} gap={4}>
-    {label}
-    {required ? (
-      <Tag style={{ fontSize: 8 }} color="error">
-        обязательно
-      </Tag>
-    ) : null}
-  </Flex>
-);
+import { customizeRequiredMark } from "@/shared/lib/components/customizeRequiredMark";
 
 export interface CompanyFormProps {
   form?: FormInstance;
